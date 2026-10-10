@@ -68,36 +68,25 @@
 
     <h3 class="section-title">Share an idea</h3>
     <p class="muted">Add a suggestion below. Keep it simple — theme, activity, music, setup, guest experience, or anything that could make this event special.</p>
-    <form id="ideaForm">
-      <div class="form-grid">
-        <div>
-          <label for="person">Your name / cousin name *</label>
-          <input id="person" name="person" maxlength="60" required placeholder="e.g. Sagar">
-        </div>
-        <div>
-          <label for="category">Idea type</label>
-          <select id="category" name="category">
-            <option>Activity / Fun</option><option>Theme / Decoration</option><option>Music / Performance</option><option>Event flow</option><option>Guest experience</option><option>Food / Refreshments</option><option>Other</option>
-          </select>
-        </div>
-        <div class="full">
-          <label for="ideaTitle">Idea title *</label>
-          <input id="ideaTitle" name="ideaTitle" maxlength="100" required placeholder="e.g. Family photo corner">
-        </div>
-        <div class="full">
-          <label for="details">Tell us more</label>
-          <textarea id="details" name="details" maxlength="1200" placeholder="What is the idea? Why would it work? What might we need?"></textarea>
-        </div>
-        <div class="full">
-          <label for="link">Reference link (optional)</label>
-          <input id="link" name="link" type="url" placeholder="https://..." maxlength="500">
-        </div>
-      </div>
-      <div class="actions">
-        <button class="btn primary" type="submit">＋ Add idea</button>
-        <button class="btn secondary" type="reset">Clear form</button>
-      </div>
-    </form>
+    
+    <div class="idea-submit">
+      <h3>Share Your Idea ❤️</h3>
+      <p>
+        Have an idea for Haldi, Reception Night, or Wedding?
+        Share it with the cousins' planning team!
+      </p>
+
+      <a
+        class="btn primary"
+        href="https://docs.google.com/forms/d/e/1FAIpQLSes8UU9GiUBHAm4ySKmnNfqNXMvcxw9G1mXNNPZ8weV4smldQ/viewform"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="display:inline-block; text-decoration:none;"
+      >
+        ＋ Submit Your Idea
+      </a>
+    </div>
+
 
     <div class="ideas-head">
       <div><h3 style="margin:0">Team ideas</h3><small class="muted" id="ideaCount">0 ideas</small></div>
@@ -107,75 +96,91 @@
   </section>
 </main>
 <footer>Start with ideas. Discuss together. Agree on the plan. Then assign owners. ❤️</footer>
+
 <script>
 (() => {
   const events = {
     "Haldi": {
-      emoji:"🌼",
-      desc:"A joyful, relaxed family celebration. Let’s collect ideas and build the flow together.",
-      flow:["Setup and final checks","Welcome family and guests","Opening / explain the plan","Haldi ceremony and family participation","Photos and fun activities","Food and refreshments","Group photos and wrap-up","Cleanup and return borrowed items"]
+      emoji: "🌼",
+      desc: "A joyful, relaxed family celebration.",
+      flow: [
+        "Setup and final checks",
+        "Welcome family and guests",
+        "Opening and event introduction",
+        "Haldi ceremony and family participation",
+        "Photos and fun activities",
+        "Food and refreshments",
+        "Group photos and wrap-up"
+      ]
     },
     "Reception Night": {
-      emoji:"✨",
-      desc:"A warm, memorable celebration for the couple and guests.",
-      flow:["Team and vendor readiness check","Guest arrival and welcome","Couple’s entry","Welcome / opening announcement","Family greetings and photographs","Speeches, performances, or special moments","Cake cutting, if planned","Dinner and guest send-off","Venue and belongings check"]
+      emoji: "✨",
+      desc: "A warm, memorable celebration for the couple and guests.",
+      flow: [
+        "Team and vendor readiness check",
+        "Guest arrival and welcome",
+        "Couple's entry",
+        "Welcome announcement",
+        "Family greetings and photographs",
+        "Speeches and performances",
+        "Cake cutting, if planned",
+        "Dinner and guest send-off"
+      ]
     },
     "Wedding": {
-      emoji:"💍",
-      desc:"A meaningful Christian wedding, coordinated with the couple, family, and church.",
-      flow:["Confirm ceremony details with the church and family","Check couple and wedding party readiness","Welcome and seat guests","Ceremony according to the church’s guidance","Couple and family photographs","Guest greetings and meal / refreshments, if planned","Check personal items and final arrangements"]
+      emoji: "💍",
+      desc: "A meaningful Christian wedding.",
+      flow: [
+        "Confirm ceremony details with the church",
+        "Check couple and wedding party readiness",
+        "Welcome and seat guests",
+        "Wedding ceremony",
+        "Couple and family photographs",
+        "Guest greetings and refreshments, if planned",
+        "Final arrangements"
+      ]
     }
   };
-  const STORAGE = "bhaiKiShaadiIdeas_v1";
+
   let activeEvent = "Haldi";
-  let ideas = [];
-  try { ideas = JSON.parse(localStorage.getItem(STORAGE) || "[]"); if (!Array.isArray(ideas)) ideas = []; } catch (_) { ideas = []; }
-  const $ = id => document.getElementById(id);
-  const save = () => { try { localStorage.setItem(STORAGE, JSON.stringify(ideas)); } catch (_) {} };
-  const safe = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+
   function renderEvent() {
-    const e = events[activeEvent];
-    $("eventTitle").textContent = e.emoji + " " + activeEvent;
-    $("eventDesc").textContent = e.desc;
-    $("eventFlow").replaceChildren(...e.flow.map(item => { const li=document.createElement("li"); li.textContent=item; return li; }));
-    document.querySelectorAll(".tab").forEach(tab => tab.setAttribute("aria-selected", String(tab.dataset.event === activeEvent)));
-    renderIdeas();
+    const event = events[activeEvent];
+
+    document.getElementById("eventTitle").textContent =
+      event.emoji + " " + activeEvent;
+
+    document.getElementById("eventDesc").textContent =
+      event.desc;
+
+    const flow = document.getElementById("eventFlow");
+
+    flow.replaceChildren(
+      ...event.flow.map(item => {
+        const li = document.createElement("li");
+        li.textContent = item;
+        return li;
+      })
+    );
+
+    document.querySelectorAll(".tab").forEach(tab => {
+      tab.setAttribute(
+        "aria-selected",
+        String(tab.dataset.event === activeEvent)
+      );
+    });
   }
-  function renderIdeas() {
-    const selected = ideas.filter(i => i.event === activeEvent);
-    $("ideaCount").textContent = `${selected.length} idea${selected.length === 1 ? "" : "s"} for ${activeEvent}`;
-    const container = $("ideas");
-    if (!selected.length) { container.innerHTML = '<div class="empty">No ideas yet. Be the first to add one!</div>'; return; }
-    container.innerHTML = selected.slice().reverse().map(i => `
-      <article class="idea">
-        <div class="idea-top"><h3>${safe(i.title)}</h3><span class="pill">${safe(i.category)}</span></div>
-        <p>${safe(i.details || "No extra details added.")}</p>
-        <small>Suggested by ${safe(i.person)}${i.date ? " · " + safe(i.date) : ""}</small>
-        ${i.link ? `<p><a href="${safe(i.link)}" target="_blank" rel="noopener noreferrer">Open reference link ↗</a></p>` : ""}
-        <div class="idea-actions"><button class="btn secondary" type="button" data-delete="${safe(i.id)}">Delete</button></div>
-      </article>`).join("");
-    container.querySelectorAll("[data-delete]").forEach(btn => btn.addEventListener("click", () => {
-      if (!confirm("Delete this idea from this browser?")) return;
-      ideas = ideas.filter(i => i.id !== btn.dataset.delete); save(); renderIdeas();
-    }));
-  }
-  document.querySelectorAll(".tab").forEach(tab => tab.addEventListener("click", () => { activeEvent = tab.dataset.event; renderEvent(); }));
-  $("ideaForm").addEventListener("submit", event => {
-    event.preventDefault();
-    const person = $("person").value.trim(), title = $("ideaTitle").value.trim(), link = $("link").value.trim();
-    if (!person || !title) return;
-    if (link && !/^https?:\/\//i.test(link)) { alert("Please enter a link starting with https:// or http://"); return; }
-    ideas.push({id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()), event:activeEvent, person, category:$("category").value, title, details:$("details").value.trim(), link, date:new Date().toLocaleDateString()});
-    save(); $("ideaForm").reset(); renderIdeas();
+
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      activeEvent = tab.dataset.event;
+      renderEvent();
+    });
   });
-  $("exportBtn").addEventListener("click", () => {
-    const data = JSON.stringify(ideas, null, 2);
-    const blob = new Blob([data], {type:"application/json"});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a"); a.href=url; a.download="bhai-ki-shaadi-ideas.json"; a.click(); URL.revokeObjectURL(url);
-  });
+
   renderEvent();
 })();
 </script>
+
 </body>
 </html>
