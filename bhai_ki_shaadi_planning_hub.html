@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bhai Ki Shaadi — Cousins' Planning Hub</title>
+<style>
+  :root { --ink:#29251f; --muted:#716a61; --paper:#fffaf3; --card:#fff; --line:#eadfce; --accent:#8d3d4d; --accent2:#f3e4d8; --green:#416b52; }
+  * { box-sizing:border-box; }
+  body { margin:0; color:var(--ink); background:linear-gradient(180deg,#f8e9dc 0,#fffaf3 300px); font:16px/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+  header { padding:36px 18px 26px; text-align:center; }
+  header .eyebrow { text-transform:uppercase; letter-spacing:.16em; font-size:.76rem; color:var(--accent); font-weight:750; }
+  h1 { margin:8px 0; font-size:clamp(2rem,6vw,3.2rem); line-height:1.1; }
+  header p { max-width:650px; margin:12px auto 0; color:var(--muted); }
+  main { width:min(100% - 28px,1000px); margin:0 auto 60px; }
+  .notice { background:#fff3d9; border:1px solid #ead7a9; border-radius:14px; padding:13px 16px; margin-bottom:18px; font-size:.93rem; }
+  .tabs { display:flex; gap:8px; flex-wrap:wrap; margin:18px 0; }
+  .tab { border:1px solid var(--line); background:white; padding:10px 15px; border-radius:999px; cursor:pointer; font:inherit; font-weight:700; }
+  .tab[aria-selected="true"] { background:var(--accent); color:white; border-color:var(--accent); }
+  .panel { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:clamp(16px,3vw,26px); box-shadow:0 8px 30px #55351a0a; }
+  .panel h2 { margin:0 0 4px; font-size:1.55rem; }
+  .muted { color:var(--muted); }
+  .flow { margin:18px 0 24px; padding-left:23px; }
+  .flow li { padding:4px 0 4px 4px; }
+  .section-title { margin:26px 0 10px; font-size:1.1rem; }
+  label { display:block; font-weight:700; margin:12px 0 5px; font-size:.93rem; }
+  input,select,textarea { width:100%; padding:11px 12px; border:1px solid #d9cbbb; border-radius:10px; font:inherit; background:#fff; color:var(--ink); }
+  textarea { min-height:95px; resize:vertical; }
+  input:focus,select:focus,textarea:focus,button:focus-visible { outline:3px solid #d9a8af; outline-offset:2px; }
+  .form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 14px; }
+  .full { grid-column:1/-1; }
+  .btn { border:0; border-radius:10px; padding:11px 15px; font:inherit; font-weight:750; cursor:pointer; }
+  .primary { background:var(--accent); color:white; }
+  .secondary { background:var(--accent2); color:var(--ink); }
+  .actions { display:flex; gap:9px; flex-wrap:wrap; margin-top:16px; }
+  .ideas-head { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-top:24px; }
+  .idea-list { display:grid; gap:12px; margin-top:12px; }
+  .idea { border:1px solid var(--line); border-radius:13px; padding:14px; background:#fffdf9; }
+  .idea-top { display:flex; justify-content:space-between; gap:10px; align-items:start; }
+  .idea h3 { margin:0; font-size:1.05rem; overflow-wrap:anywhere; }
+  .pill { font-size:.75rem; padding:3px 8px; border-radius:999px; background:var(--accent2); white-space:nowrap; }
+  .idea p { margin:8px 0; white-space:pre-wrap; overflow-wrap:anywhere; }
+  .idea small { color:var(--muted); }
+  .idea-actions { display:flex; gap:8px; margin-top:10px; }
+  .empty { border:1px dashed #d8c7b4; padding:18px; border-radius:12px; color:var(--muted); text-align:center; }
+  footer { text-align:center; padding:0 18px 32px; color:var(--muted); font-size:.86rem; }
+  @media(max-width:620px) { .form-grid { grid-template-columns:1fr; } .full { grid-column:auto; } .idea-top { align-items:start; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Our family • Our celebration</div>
+  <h1>❤️ Bhai Ki Shaadi</h1>
+  <p>Cousins’ Planning Hub — bring your ideas, shape the events together, and keep the plan organised.</p>
+</header>
+<main>
+  <div class="notice"><strong>Quick note:</strong> This first version saves ideas in this browser on this device. It does <strong>not</strong> automatically share new ideas with everyone. To collect ideas from all cousins in one shared place, publish/connect this page to a shared service or use a shared form.</div>
+  <div class="tabs" role="tablist" aria-label="Wedding events">
+    <button class="tab" role="tab" aria-selected="true" data-event="Haldi">🌼 Haldi</button>
+    <button class="tab" role="tab" aria-selected="false" data-event="Reception Night">✨ Reception Night</button>
+    <button class="tab" role="tab" aria-selected="false" data-event="Wedding">💍 Wedding</button>
+  </div>
+  <section class="panel" aria-live="polite">
+    <h2 id="eventTitle">🌼 Haldi</h2>
+    <p class="muted" id="eventDesc">A joyful, relaxed family celebration. Let’s collect ideas and build the flow together.</p>
+    <h3 class="section-title">Draft event flow</h3>
+    <ol class="flow" id="eventFlow"></ol>
+
+    <h3 class="section-title">Share an idea</h3>
+    <p class="muted">Add a suggestion below. Keep it simple — theme, activity, music, setup, guest experience, or anything that could make this event special.</p>
+    <form id="ideaForm">
+      <div class="form-grid">
+        <div>
+          <label for="person">Your name / cousin name *</label>
+          <input id="person" name="person" maxlength="60" required placeholder="e.g. Sagar">
+        </div>
+        <div>
+          <label for="category">Idea type</label>
+          <select id="category" name="category">
+            <option>Activity / Fun</option><option>Theme / Decoration</option><option>Music / Performance</option><option>Event flow</option><option>Guest experience</option><option>Food / Refreshments</option><option>Other</option>
+          </select>
+        </div>
+        <div class="full">
+          <label for="ideaTitle">Idea title *</label>
+          <input id="ideaTitle" name="ideaTitle" maxlength="100" required placeholder="e.g. Family photo corner">
+        </div>
+        <div class="full">
+          <label for="details">Tell us more</label>
+          <textarea id="details" name="details" maxlength="1200" placeholder="What is the idea? Why would it work? What might we need?"></textarea>
+        </div>
+        <div class="full">
+          <label for="link">Reference link (optional)</label>
+          <input id="link" name="link" type="url" placeholder="https://..." maxlength="500">
+        </div>
+      </div>
+      <div class="actions">
+        <button class="btn primary" type="submit">＋ Add idea</button>
+        <button class="btn secondary" type="reset">Clear form</button>
+      </div>
+    </form>
+
+    <div class="ideas-head">
+      <div><h3 style="margin:0">Team ideas</h3><small class="muted" id="ideaCount">0 ideas</small></div>
+      <button class="btn secondary" id="exportBtn" type="button">Download ideas (.json)</button>
+    </div>
+    <div id="ideas" class="idea-list"><div class="empty">No ideas yet. Be the first to add one!</div></div>
+  </section>
+</main>
+<footer>Start with ideas. Discuss together. Agree on the plan. Then assign owners. ❤️</footer>
+<script>
+(() => {
+  const events = {
+    "Haldi": {
+      emoji:"🌼",
+      desc:"A joyful, relaxed family celebration. Let’s collect ideas and build the flow together.",
+      flow:["Setup and final checks","Welcome family and guests","Opening / explain the plan","Haldi ceremony and family participation","Photos and fun activities","Food and refreshments","Group photos and wrap-up","Cleanup and return borrowed items"]
+    },
+    "Reception Night": {
+      emoji:"✨",
+      desc:"A warm, memorable celebration for the couple and guests.",
+      flow:["Team and vendor readiness check","Guest arrival and welcome","Couple’s entry","Welcome / opening announcement","Family greetings and photographs","Speeches, performances, or special moments","Cake cutting, if planned","Dinner and guest send-off","Venue and belongings check"]
+    },
+    "Wedding": {
+      emoji:"💍",
+      desc:"A meaningful Christian wedding, coordinated with the couple, family, and church.",
+      flow:["Confirm ceremony details with the church and family","Check couple and wedding party readiness","Welcome and seat guests","Ceremony according to the church’s guidance","Couple and family photographs","Guest greetings and meal / refreshments, if planned","Check personal items and final arrangements"]
+    }
+  };
+  const STORAGE = "bhaiKiShaadiIdeas_v1";
+  let activeEvent = "Haldi";
+  let ideas = [];
+  try { ideas = JSON.parse(localStorage.getItem(STORAGE) || "[]"); if (!Array.isArray(ideas)) ideas = []; } catch (_) { ideas = []; }
+  const $ = id => document.getElementById(id);
+  const save = () => { try { localStorage.setItem(STORAGE, JSON.stringify(ideas)); } catch (_) {} };
+  const safe = value => String(value ?? "").replace(/[&<>"']/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+  function renderEvent() {
+    const e = events[activeEvent];
+    $("eventTitle").textContent = e.emoji + " " + activeEvent;
+    $("eventDesc").textContent = e.desc;
+    $("eventFlow").replaceChildren(...e.flow.map(item => { const li=document.createElement("li"); li.textContent=item; return li; }));
+    document.querySelectorAll(".tab").forEach(tab => tab.setAttribute("aria-selected", String(tab.dataset.event === activeEvent)));
+    renderIdeas();
+  }
+  function renderIdeas() {
+    const selected = ideas.filter(i => i.event === activeEvent);
+    $("ideaCount").textContent = `${selected.length} idea${selected.length === 1 ? "" : "s"} for ${activeEvent}`;
+    const container = $("ideas");
+    if (!selected.length) { container.innerHTML = '<div class="empty">No ideas yet. Be the first to add one!</div>'; return; }
+    container.innerHTML = selected.slice().reverse().map(i => `
+      <article class="idea">
+        <div class="idea-top"><h3>${safe(i.title)}</h3><span class="pill">${safe(i.category)}</span></div>
+        <p>${safe(i.details || "No extra details added.")}</p>
+        <small>Suggested by ${safe(i.person)}${i.date ? " · " + safe(i.date) : ""}</small>
+        ${i.link ? `<p><a href="${safe(i.link)}" target="_blank" rel="noopener noreferrer">Open reference link ↗</a></p>` : ""}
+        <div class="idea-actions"><button class="btn secondary" type="button" data-delete="${safe(i.id)}">Delete</button></div>
+      </article>`).join("");
+    container.querySelectorAll("[data-delete]").forEach(btn => btn.addEventListener("click", () => {
+      if (!confirm("Delete this idea from this browser?")) return;
+      ideas = ideas.filter(i => i.id !== btn.dataset.delete); save(); renderIdeas();
+    }));
+  }
+  document.querySelectorAll(".tab").forEach(tab => tab.addEventListener("click", () => { activeEvent = tab.dataset.event; renderEvent(); }));
+  $("ideaForm").addEventListener("submit", event => {
+    event.preventDefault();
+    const person = $("person").value.trim(), title = $("ideaTitle").value.trim(), link = $("link").value.trim();
+    if (!person || !title) return;
+    if (link && !/^https?:\/\//i.test(link)) { alert("Please enter a link starting with https:// or http://"); return; }
+    ideas.push({id: (crypto.randomUUID ? crypto.randomUUID() : String(Date.now()) + Math.random()), event:activeEvent, person, category:$("category").value, title, details:$("details").value.trim(), link, date:new Date().toLocaleDateString()});
+    save(); $("ideaForm").reset(); renderIdeas();
+  });
+  $("exportBtn").addEventListener("click", () => {
+    const data = JSON.stringify(ideas, null, 2);
+    const blob = new Blob([data], {type:"application/json"});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a"); a.href=url; a.download="bhai-ki-shaadi-ideas.json"; a.click(); URL.revokeObjectURL(url);
+  });
+  renderEvent();
+})();
+</script>
+</body>
+</html>
