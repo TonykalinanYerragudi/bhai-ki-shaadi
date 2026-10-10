@@ -5,15 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="Bhai Ki Shaadi cousins' planning hub">
     <title>Bhai Ki Shaadi — Cousins' Planning Hub</title>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V1GFCXPJHC"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', 'G-V1GFCXPJHC');
-    </script>
     <style>
       :root {
         --ink: #29251f;
@@ -307,6 +299,70 @@
         text-align: center;
       }
 
+      .countdown {
+        width: min(100% - 28px, 680px);
+        margin: 0 auto 26px;
+        padding: 20px 16px;
+        text-align: center;
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: 0 8px 30px #55351a0a;
+      }
+
+      .countdown-label {
+        margin: 0 0 5px;
+        color: var(--accent);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .countdown h2 {
+        margin: 0 0 5px;
+        font-size: clamp(1.25rem, 4vw, 1.8rem);
+      }
+
+      .countdown-date {
+        margin: 0 0 16px;
+        color: var(--muted);
+      }
+
+      .countdown-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 9px;
+        max-width: 480px;
+        margin: 0 auto;
+      }
+
+      .countdown-unit {
+        padding: 12px 5px;
+        background: #fff8f1;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+      }
+
+      .countdown-number {
+        display: block;
+        color: var(--accent);
+        font-size: clamp(1.45rem, 5vw, 2rem);
+        font-weight: 800;
+        line-height: 1.15;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .countdown-unit span:last-child {
+        color: var(--muted);
+        font-size: 0.75rem;
+      }
+
+      #countdownMessage {
+        margin: 12px 0 0;
+        font-weight: 700;
+      }
+
       footer {
         text-align: center;
         padding: 0 18px 32px;
@@ -327,7 +383,32 @@
           align-items: start;
         }
       }
+
+      @media (max-width: 380px) {
+        .countdown-grid {
+          gap: 5px;
+        }
+
+        .countdown-unit {
+          padding: 10px 2px;
+        }
+
+        .countdown-unit span:last-child {
+          font-size: 0.68rem;
+        }
+      }
     </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V1GFCXPJHC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-V1GFCXPJHC');
+    </script>
   </head>
 
   <body>
@@ -337,10 +418,21 @@
       <p>Cousins’ Planning Hub — bring your ideas, shape the events together, and keep the plan organised.</p>
     </header>
 
-    <main>
-      <div class="notice">
-        <strong>Welcome, cousins!</strong> Submit your ideas below. They’ll be saved in our shared database and shown in the Team Ideas section.
+    <section class="countdown" aria-label="Wedding countdown">
+      <p class="countdown-label">The big day is coming</p>
+      <h2>💍 Sagar’s Wedding Countdown</h2>
+      <p class="countdown-date">4 November 2026 · 11:30 AM IST</p>
+      <div class="countdown-grid" role="timer" aria-live="off" aria-label="Time remaining until the wedding">
+        <div class="countdown-unit"><span class="countdown-number" id="countDays">--</span><span>Days</span></div>
+        <div class="countdown-unit"><span class="countdown-number" id="countHours">--</span><span>Hours</span></div>
+        <div class="countdown-unit"><span class="countdown-number" id="countMinutes">--</span><span>Minutes</span></div>
+        <div class="countdown-unit"><span class="countdown-number" id="countSeconds">--</span><span>Seconds</span></div>
       </div>
+      <p id="countdownMessage">Counting down to the celebration ❤️</p>
+    </section>
+
+    <main>
+      <div class="notice"><strong>Welcome, cousins!</strong> Submit your ideas below. They’ll be saved in our shared database and shown in the Team Ideas section.</div>
 
       <div class="tabs" role="tablist" aria-label="Wedding events">
         <button class="tab" role="tab" aria-selected="true" data-event="Haldi">🌼 Haldi</button>
@@ -670,6 +762,34 @@
         }
       });
 
+      function updateWeddingCountdown() {
+        const weddingTime = new Date("2026-11-04T11:30:00+05:30").getTime();
+        const remaining = weddingTime - Date.now();
+        const message = $("countdownMessage");
+
+        if (remaining <= 0) {
+          $("countDays").textContent = "0";
+          $("countHours").textContent = "00";
+          $("countMinutes").textContent = "00";
+          $("countSeconds").textContent = "00";
+          message.textContent = "❤️ The wedding day is here! Let’s celebrate!";
+          return;
+        }
+
+        const days = Math.floor(remaining / 86400000);
+        const hours = Math.floor((remaining % 86400000) / 3600000);
+        const minutes = Math.floor((remaining % 3600000) / 60000);
+        const seconds = Math.floor((remaining % 60000) / 1000);
+
+        $("countDays").textContent = String(days);
+        $("countHours").textContent = String(hours).padStart(2, "0");
+        $("countMinutes").textContent = String(minutes).padStart(2, "0");
+        $("countSeconds").textContent = String(seconds).padStart(2, "0");
+        message.textContent = "Every second brings us closer to the celebration ❤️";
+      }
+
+      updateWeddingCountdown();
+      setInterval(updateWeddingCountdown, 1000);
       renderEvent();
       loadIdeas();
     </script>
