@@ -471,6 +471,202 @@
           font-size: 0.68rem;
         }
       }
+
+      /* ===== Bhai Ki Shaadi: Modern Design System ===== */
+      :root {
+        color-scheme: light;
+
+        --color-ink: #29211f;
+        --color-muted: #766a64;
+        --color-paper: #fffaf5;
+        --color-surface: #ffffff;
+        --color-primary: #803b4a;
+        --color-primary-hover: #682b39;
+        --color-gold: #b99459;
+        --color-border: #eadfd4;
+
+        --radius-sm: 12px;
+        --radius-md: 20px;
+        --radius-lg: 30px;
+        --radius-pill: 999px;
+
+        --shadow-card:
+          0 12px 36px rgb(50 30 20 / 7%);
+        --shadow-hover:
+          0 20px 48px rgb(50 30 20 / 12%);
+
+        --page-width: 1160px;
+        --section-space: clamp(48px, 8vw, 100px);
+      }
+
+      html {
+        scroll-behavior: smooth;
+        scroll-padding-top: 90px;
+      }
+
+      body {
+        color: var(--color-ink);
+        background: var(--color-paper);
+        font-family:
+          Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
+        line-height: 1.65;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      button,
+      input,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      button {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      button:focus-visible,
+      a:focus-visible {
+        outline: 3px solid var(--color-gold);
+        outline-offset: 4px;
+      }
+
+      main {
+        width: min(calc(100% - 40px), var(--page-width));
+        margin-inline: auto;
+      }
+
+      .panel,
+      .quiz-card {
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        background: var(--color-surface);
+        box-shadow: var(--shadow-card);
+      }
+
+      .panel,
+      .quiz-card,
+      .idea-card,
+      .idea-submit,
+      .countdown {
+        transition:
+          box-shadow 220ms ease,
+          border-color 220ms ease,
+          transform 220ms ease;
+      }
+
+      .idea-card {
+        border-radius: var(--radius-sm);
+        background: var(--color-surface);
+      }
+
+      .btn {
+        min-height: 46px;
+        padding: 11px 20px;
+        border-radius: var(--radius-pill);
+        transition:
+          background-color 180ms ease,
+          transform 180ms ease,
+          box-shadow 180ms ease;
+      }
+
+      .btn:not(:disabled):hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgb(50 30 20 / 12%);
+      }
+
+      .primary {
+        background: var(--color-primary);
+      }
+
+      .primary:not(:disabled):hover {
+        background: var(--color-primary-hover);
+      }
+
+      .tabs {
+        gap: 10px;
+      }
+
+      .tab {
+        border-radius: var(--radius-pill);
+        transition:
+          background-color 180ms ease,
+          color 180ms ease,
+          border-color 180ms ease;
+      }
+
+      .countdown {
+        width: min(calc(100% - 40px), 760px);
+        padding: clamp(24px, 5vw, 44px);
+        border-radius: var(--radius-lg);
+        background:
+          radial-gradient(
+            ellipse at top,
+            rgb(185 148 89 / 12%),
+            transparent 65%
+          ),
+          var(--color-surface);
+      }
+
+      .countdown-grid {
+        gap: clamp(8px, 2vw, 14px);
+      }
+
+      .countdown-unit {
+        padding: 16px 8px;
+        border-radius: var(--radius-sm);
+        background: #fff8f0;
+      }
+
+      input,
+      select,
+      textarea {
+        border-radius: var(--radius-sm);
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: var(--color-primary);
+        outline-color: rgb(128 59 74 / 25%);
+      }
+
+      @media (hover: hover) {
+        .idea-card:hover {
+          border-color: var(--color-gold);
+          box-shadow: var(--shadow-card);
+        }
+      }
+
+      @media (max-width: 620px) {
+        main {
+          width: min(calc(100% - 28px), var(--page-width));
+        }
+
+        .countdown {
+          width: calc(100% - 28px);
+          border-radius: var(--radius-md);
+        }
+
+        .panel,
+        .quiz-card {
+          border-radius: 18px;
+        }
+
+        .btn {
+          min-height: 48px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          animation-duration: 0.01ms !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+
     </style>
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V1GFCXPJHC"></script>
