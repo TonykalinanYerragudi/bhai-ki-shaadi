@@ -204,7 +204,8 @@
         color: var(--ink);
       }
 
-      .actions {
+      .actions,
+      .quiz-actions {
         display: flex;
         gap: 9px;
         flex-wrap: wrap;
@@ -212,7 +213,8 @@
       }
 
       #formMessage,
-      #ideasMessage {
+      #ideasMessage,
+      #quizMessage {
         margin: 14px 0 0;
         font-weight: 650;
         overflow-wrap: anywhere;
@@ -223,7 +225,9 @@
       }
 
       #formMessage.error,
-      #ideasMessage.error {
+      #ideasMessage.error,
+      #quizBoardMessage.error,
+      #quizMessage.error {
         color: var(--error);
       }
 
@@ -363,6 +367,76 @@
         font-weight: 700;
       }
 
+      .quiz-card {
+        margin: 22px 0;
+        padding: clamp(16px, 3vw, 26px);
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 18px;
+        box-shadow: 0 8px 30px #55351a0a;
+      }
+
+      .quiz-card h2 {
+        margin: 0 0 5px;
+      }
+
+      .quiz-card .muted {
+        margin-top: 0;
+      }
+
+      .quiz-progress {
+        height: 8px;
+        background: #f3e4d8;
+        border-radius: 99px;
+        overflow: hidden;
+        margin: 16px 0;
+      }
+
+      .quiz-progress span {
+        display: block;
+        height: 100%;
+        width: 0;
+        background: var(--accent);
+        transition: width 0.2s;
+      }
+
+      .quiz-option {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        border: 1px solid var(--line);
+        border-radius: 11px;
+        padding: 11px;
+        margin: 9px 0;
+        cursor: pointer;
+      }
+
+      .quiz-option:has(input:checked) {
+        border-color: var(--accent);
+        background: #fff8f1;
+      }
+
+      .quiz-option input {
+        width: auto;
+        margin-top: 5px;
+      }
+
+      .quiz-result {
+        padding: 14px;
+        border-radius: 12px;
+        background: #fff8f1;
+        margin-top: 14px;
+      }
+
+      .quiz-result h3 {
+        margin: 0 0 5px;
+      }
+
+      .quiz-small {
+        font-size: 0.86rem;
+        color: var(--muted);
+      }
+
       footer {
         text-align: center;
         padding: 0 18px 32px;
@@ -399,15 +473,14 @@
       }
     </style>
 
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V1GFCXPJHC"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
-      gtag('js', new Date());
-      gtag('config', 'G-V1GFCXPJHC');
+      gtag("js", new Date());
+      gtag("config", "G-V1GFCXPJHC");
     </script>
   </head>
 
@@ -438,6 +511,9 @@
         <button class="tab" role="tab" aria-selected="true" data-event="Haldi">🌼 Haldi</button>
         <button class="tab" role="tab" aria-selected="false" data-event="Reception Night">✨ Reception Night</button>
         <button class="tab" role="tab" aria-selected="false" data-event="Wedding">💍 Wedding</button>
+        <button class="tab" type="button" data-target="sagarQuiz">
+          🎯 Sagar Quiz
+        </button>
       </div>
 
       <section class="panel" aria-live="polite">
@@ -519,6 +595,44 @@
         <div id="ideas" class="idea-list">
           <div class="empty">Loading ideas…</div>
         </div>
+      </section>
+
+      <section class="quiz-card" id="sagarQuiz" aria-labelledby="quizHeading">
+        <h2 id="quizHeading">🎯 How Well Do You Know Sagar?</h2>
+        <p class="muted">A fun family quiz for the cousins. Answer 10 questions and see where you rank!</p>
+
+        <div id="quizIntro">
+          <label for="quizPlayerName">Your cousin name *</label>
+          <input id="quizPlayerName" maxlength="40" autocomplete="nickname" placeholder="Enter your name" required>
+          <div class="quiz-actions">
+            <button class="btn primary" id="startQuiz" type="button">Start the quiz 🎉</button>
+          </div>
+        </div>
+
+        <div id="quizPlay" hidden>
+          <div class="quiz-small" id="quizProgressText">Question 1 of 10</div>
+          <div class="quiz-progress" aria-hidden="true"><span id="quizProgressBar"></span></div>
+          <h3 id="quizQuestionText"></h3>
+          <div id="quizOptions"></div>
+          <p id="quizMessage" role="status" aria-live="polite"></p>
+          <div class="quiz-actions">
+            <button class="btn primary" id="quizNext" type="button">Next question →</button>
+          </div>
+        </div>
+
+        <div id="quizResult" hidden></div>
+
+        <div class="ideas-head">
+          <h3 class="section-title">🏆 Cousins Leaderboard</h3>
+          <button class="btn secondary" id="refreshQuizBoard" type="button">Refresh scores</button>
+        </div>
+
+        <p class="quiz-small" id="quizBoardMessage" role="status" aria-live="polite">Loading leaderboard…</p>
+        <div id="quizLeaderboard" class="idea-list">
+          <div class="empty">Loading scores…</div>
+        </div>
+
+        <p class="privacy-note">Use a nickname if you prefer. Quiz scores and names are visible to visitors of this public website.</p>
       </section>
     </main>
 
@@ -623,7 +737,7 @@
 
           const heading = document.createElement("h3");
           heading.className = "section-title";
-          heading.textContent = events[eventName].emoji + " " + eventName;
+          heading.textContent = `${events[eventName].emoji} ${eventName}`;
           container.append(heading);
 
           for (const row of eventRows) {
@@ -649,7 +763,7 @@
 
             const meta = document.createElement("small");
             const date = row.created_at ? new Date(row.created_at).toLocaleString() : "";
-            meta.textContent = `Suggested by ${row.name}${date ? " · " + date : ""}`;
+            meta.textContent = `Suggested by ${row.name}${date ? ` · ${date}` : ""}`;
             card.append(meta);
 
             const href = row.link ? safeLink(row.link) : null;
@@ -694,6 +808,14 @@
 
       document.querySelectorAll(".tab").forEach((tab) => {
         tab.addEventListener("click", () => {
+          if (tab.dataset.target === "sagarQuiz") {
+            $("sagarQuiz").scrollIntoView({
+              behavior: "smooth",
+              block: "start"
+            });
+            return;
+          }
+
           activeEvent = tab.dataset.event;
           renderEvent();
         });
@@ -715,7 +837,7 @@
           try {
             const parsed = new URL(linkValue);
             if (!["http:", "https:"].includes(parsed.protocol)) {
-              throw Error("Invalid protocol");
+              throw new Error("Invalid protocol");
             }
           } catch {
             message.textContent = "Please enter a valid link beginning with https:// or http://.";
@@ -788,10 +910,215 @@
         message.textContent = "Every second brings us closer to the celebration ❤️";
       }
 
+      async function quizRequest(payload) {
+        const response = await fetch(`${SUPABASE_URL}/functions/v1/sagar-quiz`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            apikey: SUPABASE_PUBLISHABLE_KEY
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const body = await response.json().catch(() => ({ error: "Unexpected response from quiz service." }));
+
+        if (!response.ok) {
+          throw new Error(body.error || "Quiz service request failed.");
+        }
+
+        return body;
+      }
+
+      let quizQuestions = [];
+      let quizIndex = 0;
+      let quizAnswers = [];
+      let quizName = "";
+      let quizBusy = false;
+
+      function renderQuizQuestion() {
+        const q = quizQuestions[quizIndex];
+        if (!q) return;
+
+        $("quizProgressText").textContent = `Question ${quizIndex + 1} of ${quizQuestions.length}`;
+        $("quizProgressBar").style.width = `${((quizIndex + 1) / quizQuestions.length) * 100}%`;
+        $("quizQuestionText").textContent = q.question;
+
+        const options = $("quizOptions");
+        options.replaceChildren();
+
+        q.options.forEach((option, index) => {
+          const label = document.createElement("label");
+          label.className = "quiz-option";
+
+          const input = document.createElement("input");
+          input.type = "radio";
+          input.name = "quizAnswer";
+          input.value = String(index);
+          input.checked = quizAnswers[quizIndex] === index;
+
+          const span = document.createElement("span");
+          span.textContent = option;
+
+          label.append(input, span);
+          options.append(label);
+        });
+
+        $("quizMessage").textContent = "";
+        $("quizMessage").className = "";
+        $("quizNext").textContent = quizIndex === quizQuestions.length - 1 ? "Submit answers 🎉" : "Next question →";
+      }
+
+      async function startQuiz() {
+        quizName = $("quizPlayerName").value.trim();
+
+        if (!quizName) {
+          $("quizMessage").textContent = "Please enter your cousin name to begin.";
+          $("quizMessage").className = "error";
+          return;
+        }
+
+        $("quizMessage").className = "";
+        $("quizIntro").hidden = true;
+        $("quizPlay").hidden = false;
+        $("quizResult").hidden = true;
+
+        try {
+          const data = await quizRequest({ action: "questions" });
+          quizQuestions = data.questions || [];
+          quizIndex = 0;
+          quizAnswers = Array(quizQuestions.length).fill(undefined);
+
+          if (!quizQuestions.length) {
+            throw new Error("No quiz questions were returned.");
+          }
+
+          renderQuizQuestion();
+        } catch (error) {
+          $("quizMessage").textContent = error.message || "Could not start the quiz. Please try again.";
+          $("quizMessage").className = "error";
+          $("quizIntro").hidden = false;
+          $("quizPlay").hidden = true;
+        }
+      }
+
+      function advanceQuiz() {
+        const selected = document.querySelector('input[name="quizAnswer"]:checked');
+
+        if (!selected) {
+          $("quizMessage").textContent = "Please select an answer before continuing.";
+          $("quizMessage").className = "error";
+          return;
+        }
+
+        quizAnswers[quizIndex] = Number(selected.value);
+
+        if (quizIndex < quizQuestions.length - 1) {
+          quizIndex += 1;
+          renderQuizQuestion();
+          return;
+        }
+
+        submitQuiz();
+      }
+
+      async function submitQuiz() {
+        if (quizBusy) return;
+        quizBusy = true;
+        $("quizNext").disabled = true;
+        $("quizMessage").textContent = "Submitting your answers…";
+        $("quizMessage").className = "";
+
+        try {
+          const payload = {
+            action: "submit",
+            player_name: quizName,
+            answers: quizAnswers
+          };
+
+          const data = await quizRequest(payload);
+          $("quizPlay").hidden = true;
+          $("quizResult").hidden = false;
+
+          const score = Number(data.score ?? 0);
+          const total = Number(data.total ?? quizQuestions.length);
+          const message = data.message || "Thanks for playing!";
+
+          const resultHtml = `
+            <div class="quiz-result">
+              <h3>🏆 ${quizName}, your score is ${score}/${total}</h3>
+              <p class="muted">${message}</p>
+              <p class="quiz-small">Thanks for playing! Your score has been added to the cousins leaderboard.</p>
+            </div>
+          `;
+
+          $("quizResult").innerHTML = resultHtml;
+          await loadQuizLeaderboard();
+        } catch (error) {
+          $("quizMessage").textContent = error.message || "Could not submit your quiz.";
+          $("quizMessage").className = "error";
+          $("quizPlay").hidden = false;
+        } finally {
+          quizBusy = false;
+          $("quizNext").disabled = false;
+        }
+      }
+
+      async function loadQuizLeaderboard() {
+        try {
+          const data = await quizRequest({ action: "leaderboard" });
+          const rows = data.scores || [];
+          const container = $("quizLeaderboard");
+          const message = $("quizBoardMessage");
+
+          container.replaceChildren();
+          message.textContent = rows.length ? `Showing ${rows.length} cousin${rows.length === 1 ? "" : "s"} on the leaderboard.` : "No scores yet — be the first to finish the quiz!";
+          message.className = "";
+
+          if (!rows.length) {
+            container.innerHTML = '<div class="empty">No scores yet. Be the first cousin to play!</div>';
+            return;
+          }
+
+          rows.forEach((row, index) => {
+            const card = document.createElement("article");
+            card.className = "idea-card";
+
+            const top = document.createElement("div");
+            top.className = "idea-top";
+
+            const name = document.createElement("h4");
+            name.textContent = `${index + 1}. ${row.player_name}`;
+
+            const pill = document.createElement("span");
+            pill.className = "pill";
+            pill.textContent = `${row.score}/10`;
+
+            top.append(name, pill);
+            card.append(top);
+
+            const meta = document.createElement("small");
+            meta.textContent = row.created_at ? new Date(row.created_at).toLocaleString() : "Recently played";
+            card.append(meta);
+
+            container.append(card);
+          });
+        } catch (error) {
+          $("quizBoardMessage").textContent = "Leaderboard is unavailable right now. Please try again soon.";
+          $("quizBoardMessage").className = "error";
+          $("quizLeaderboard").replaceChildren();
+        }
+      }
+      
+
+      $("startQuiz").addEventListener("click", startQuiz);
+      $("quizNext").addEventListener("click", advanceQuiz);
+      $("refreshQuizBoard").addEventListener("click", loadQuizLeaderboard);
+
       updateWeddingCountdown();
       setInterval(updateWeddingCountdown, 1000);
       renderEvent();
       loadIdeas();
+      loadQuizLeaderboard();
     </script>
   </body>
 </html>
