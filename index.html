@@ -18,7 +18,7 @@
 </head>
 <body>
 <nav class="site-nav" aria-label="Main navigation">
-  <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">♥</span><span class="brand-text">Bhai Ki Shaadi</span></a>
+  <div class="nav-brand-group"><a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">♥</span><span class="brand-text">Bhai Ki Shaadi</span></a></div>
   <div class="nav-links">
     <a href="#home" aria-current="page">Home</a>
     <a href="#events">Events</a>
@@ -27,16 +27,18 @@
   </div>
 </nav>
 <header class="hero" id="home">
-  <div class="hero-inner">
-    <p class="eyebrow">Our family · Our celebration</p>
-    <h1>One family.<br><span>One beautiful beginning.</span></h1>
-    <p class="hero-copy">We’re coming together to celebrate Sagar. Find the wedding plans, relive the memories, and make this celebration our own.</p>
-    <div class="hero-actions">
-      <a class="hero-link hero-link-primary" href="#events">Explore the celebrations <span aria-hidden="true">→</span></a>
-      <a class="hero-link hero-link-secondary" href="#our-story">Watch our story</a>
+  <div class="hero-layout">
+    <div class="hero-inner">
+      <p class="eyebrow">Our family · Our celebration</p>
+      <h1>One family.<br><span>One beautiful beginning.</span></h1>
+      <p class="hero-copy">We’re coming together to celebrate Sagar. Find the wedding plans, relive the memories, and make this celebration our own.</p>
+      <div class="hero-actions">
+        <a class="hero-link hero-link-primary" href="#events">Explore celebrations <span aria-hidden="true">→</span></a>
+        <a class="hero-link hero-link-secondary" href="#our-story">Watch our story</a>
+      </div>
     </div>
+    <img class="hero-cousins-image" src="./cousins-wedding.png" alt="Cartoon illustration of Sagar with seven male cousins and seven female cousins celebrating together" width="1536" height="1024">
   </div>
-  <img class="hero-cousins-image" src="./cousins-wedding.png" alt="Cartoon illustration of Sagar with seven male cousins and seven female cousins celebrating together" width="1536" height="1024">
 </header>
 
 <section class="countdown" aria-label="Wedding countdown">
@@ -51,7 +53,6 @@
   </div>
   <p id="countdownMessage">Counting down to the celebration ❤️</p>
 </section>
-
 
 <section class="home-section" aria-labelledby="welcomeHeading" style="width:min(calc(100% - 36px),1160px);margin-inline:auto">
   <div class="section-heading">
