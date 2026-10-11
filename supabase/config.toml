@@ -1,0 +1,2 @@
+[functions.brain-battle]
+verify_jwt = false

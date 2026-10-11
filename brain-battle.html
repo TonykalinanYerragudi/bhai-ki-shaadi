@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#8d3d4d">
+  <title>Brain Battle | Bhai Ki Shaadi</title>
+  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./brain-battle.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="./brain-battle.js" defer></script>
+</head>
+<body>
+  <header class="battle-site-header">
+    <a class="battle-brand" href="./index.html">
+      ❤️ Bhai Ki Shaadi
+    </a>
+    <a class="battle-home-link" href="./index.html">
+      ← Back to Wedding Home
+    </a>
+  </header>
+  <header>
+    <div class="eyebrow">Bhai Ki Shaadi</div>
+    <h1>Brain Battle</h1>
+    <p>Two teams. Ten questions. One wedding-day bragging right.</p>
+  </header>
+
+  <main>
+    <div class="notice">
+      Pick your side, test your knowledge, and help your team climb the leaderboard!
+    </div>
+
+    <nav class="tabs" aria-label="Brain Battle sections">
+      <button class="tab" data-view="play" aria-selected="true">Play</button>
+      <button class="tab" data-view="leaderboard" aria-selected="false">Leaderboard</button>
+    </nav>
+
+    <section id="playView" class="panel">
+      <div id="setup">
+        <h2>Join the battle</h2>
+        <p class="muted">Enter your name and choose your team.</p>
+
+        <form id="setupForm">
+          <label for="playerName">Your name</label>
+          <input id="playerName" name="playerName" maxlength="40"
+            autocomplete="name" required placeholder="Enter your name">
+
+          <fieldset class="team-options">
+            <legend>Choose your team</legend>
+            <label class="team-card">
+              <input type="radio" name="team" value="Boys" required>
+              <span class="team-emoji" aria-hidden="true">🤵</span>
+              <strong>Boys</strong>
+              <small>Team Groom</small>
+            </label>
+            <label class="team-card">
+              <input type="radio" name="team" value="Girls" required>
+              <span class="team-emoji" aria-hidden="true">👰</span>
+              <strong>Girls</strong>
+              <small>Team Bride</small>
+            </label>
+          </fieldset>
+
+          <button class="btn primary" type="submit">Start Brain Battle</button>
+        </form>
+      </div>
+
+      <div id="quiz" hidden>
+        <div class="quiz-progress">
+          <span id="questionCounter">Question 1 of 10</span>
+          <span id="scoreHint">Choose one answer</span>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <div id="progressBar"></div>
+        </div>
+        <h2 id="questionText">Loading questions…</h2>
+        <div id="answerOptions" class="answer-options"></div>
+        <p id="quizMessage" role="status" aria-live="polite"></p>
+        <div class="actions">
+          <button id="nextButton" class="btn primary" type="button" disabled>
+            Next question
+          </button>
+        </div>
+      </div>
+
+      <div id="result" hidden>
+        <p class="eyebrow">Battle complete</p>
+        <h2 id="resultTitle">Well played!</h2>
+        <p id="resultScore"></p>
+        <p id="resultTeam"></p>
+        <div class="actions">
+          <button id="playAgainButton" class="btn primary" type="button">Play again</button>
+          <button id="viewScoresButton" class="btn secondary" type="button">View leaderboard</button>
+        </div>
+      </div>
+
+      <p id="pageMessage" role="status" aria-live="polite"></p>
+    </section>
+
+    <section id="leaderboardView" class="panel" hidden>
+      <h2>Wedding champions</h2>
+      <p class="muted">Every correct answer adds a point to your team.</p>
+      <div class="leaderboard-columns">
+        <section>
+          <h3>Team standings</h3>
+          <div id="teamLeaderboard" class="leaderboard-list">
+            <p class="muted">Loading team standings…</p>
+          </div>
+        </section>
+        <section>
+          <h3>Top players</h3>
+          <div id="individualLeaderboard" class="leaderboard-list">
+            <p class="muted">Loading player scores…</p>
+          </div>
+        </section>
+      </div>
+      <button id="refreshLeaderboard" class="btn secondary" type="button">
+        Refresh scores
+      </button>
+    </section>
+  </main>
+
+  <footer class="battle-site-footer">
+    <p>Made with ❤️ for Sagar & Sravanthi</p>
+    <a href="./index.html">← Return to Wedding Home</a>
+  </footer>
+</body>
+</html>
