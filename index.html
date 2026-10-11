@@ -1,1341 +1,271 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Bhai Ki Shaadi cousins' planning hub">
-    <title>Bhai Ki Shaadi — Cousins' Planning Hub</title>
-
-    <style>
-      :root {
-        --ink: #29251f;
-        --muted: #716a61;
-        --line: #eadfce;
-        --accent: #8d3d4d;
-        --accent2: #f3e4d8;
-        --green: #416b52;
-        --error: #a12626;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        color: var(--ink);
-        background: linear-gradient(180deg, #f8e9dc 0, #fffaf3 300px);
-        font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      }
-
-      header {
-        padding: 36px 18px 26px;
-        text-align: center;
-      }
-
-      header .eyebrow {
-        text-transform: uppercase;
-        letter-spacing: 0.16em;
-        font-size: 0.76rem;
-        color: var(--accent);
-        font-weight: 750;
-      }
-
-      h1 {
-        margin: 8px 0;
-        font-size: clamp(2rem, 6vw, 3.2rem);
-        line-height: 1.1;
-      }
-
-      header p {
-        max-width: 650px;
-        margin: 12px auto 0;
-        color: var(--muted);
-      }
-
-      main {
-        width: min(100% - 28px, 1000px);
-        margin: 0 auto 60px;
-      }
-
-      .notice {
-        background: #f0f8f0;
-        border: 1px solid #c9dfc9;
-        border-radius: 14px;
-        padding: 13px 16px;
-        margin-bottom: 18px;
-        font-size: 0.93rem;
-      }
-
-      .tabs {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-        margin: 18px 0;
-      }
-
-      .tab {
-        border: 1px solid var(--line);
-        background: white;
-        padding: 10px 15px;
-        border-radius: 999px;
-        cursor: pointer;
-        font: inherit;
-        font-weight: 700;
-      }
-
-      .tab[aria-selected="true"] {
-        background: var(--accent);
-        color: white;
-        border-color: var(--accent);
-      }
-
-      .panel {
-        background: white;
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        padding: clamp(16px, 3vw, 26px);
-        box-shadow: 0 8px 30px #55351a0a;
-      }
-
-      .panel h2 {
-        margin: 0 0 4px;
-        font-size: 1.55rem;
-      }
-
-      .muted {
-        color: var(--muted);
-      }
-
-      .flow {
-        margin: 18px 0 24px;
-        padding-left: 23px;
-      }
-
-      .flow li {
-        padding: 4px 0 4px 4px;
-      }
-
-      .section-title {
-        margin: 26px 0 10px;
-        font-size: 1.1rem;
-      }
-
-      .idea-submit {
-        margin-top: 14px;
-        padding: 18px;
-        border: 1px solid var(--line);
-        border-radius: 15px;
-        background: #fffdf9;
-      }
-
-      .idea-submit h3 {
-        margin: 0 0 6px;
-      }
-
-      .idea-submit > p {
-        margin-top: 0;
-        color: var(--muted);
-      }
-
-      label {
-        display: block;
-        font-weight: 700;
-        margin: 12px 0 5px;
-        font-size: 0.93rem;
-      }
-
-      input,
-      select,
-      textarea {
-        width: 100%;
-        padding: 11px 12px;
-        border: 1px solid #d9cbbb;
-        border-radius: 10px;
-        font: inherit;
-        background: #fff;
-        color: var(--ink);
-      }
-
-      textarea {
-        min-height: 105px;
-        resize: vertical;
-      }
-
-      input:focus,
-      select:focus,
-      textarea:focus,
-      button:focus-visible {
-        outline: 3px solid #d9a8af;
-        outline-offset: 2px;
-      }
-
-      .form-grid {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0 14px;
-      }
-
-      .full {
-        grid-column: 1 / -1;
-      }
-
-      .btn {
-        border: 0;
-        border-radius: 10px;
-        padding: 11px 15px;
-        font: inherit;
-        font-weight: 750;
-        cursor: pointer;
-      }
-
-      .btn:disabled {
-        opacity: 0.65;
-        cursor: wait;
-      }
-
-      .primary {
-        background: var(--accent);
-        color: white;
-      }
-
-      .secondary {
-        background: var(--accent2);
-        color: var(--ink);
-      }
-
-      .actions,
-      .quiz-actions {
-        display: flex;
-        gap: 9px;
-        flex-wrap: wrap;
-        margin-top: 16px;
-      }
-
-      #formMessage,
-      #ideasMessage,
-      #quizMessage {
-        margin: 14px 0 0;
-        font-weight: 650;
-        overflow-wrap: anywhere;
-      }
-
-      #formMessage.success {
-        color: var(--green);
-      }
-
-      #formMessage.error,
-      #ideasMessage.error,
-      #quizBoardMessage.error,
-      #quizMessage.error {
-        color: var(--error);
-      }
-
-      .privacy-note {
-        font-size: 0.86rem;
-        color: var(--muted);
-        margin-top: 12px;
-      }
-
-      .ideas-head {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 24px;
-      }
-
-      .idea-list {
-        display: grid;
-        gap: 12px;
-        margin-top: 12px;
-      }
-
-      .idea-card {
-        border: 1px solid var(--line);
-        border-radius: 13px;
-        padding: 14px;
-        background: #fffdf9;
-      }
-
-      .idea-top {
-        display: flex;
-        justify-content: space-between;
-        gap: 10px;
-        align-items: start;
-      }
-
-      .idea-card h4 {
-        margin: 0;
-        font-size: 1.05rem;
-        overflow-wrap: anywhere;
-      }
-
-      .pill {
-        font-size: 0.75rem;
-        padding: 3px 8px;
-        border-radius: 999px;
-        background: var(--accent2);
-        white-space: nowrap;
-      }
-
-      .idea-card p {
-        margin: 8px 0;
-        white-space: pre-wrap;
-        overflow-wrap: anywhere;
-      }
-
-      .idea-card small {
-        color: var(--muted);
-      }
-
-      .idea-card a {
-        color: var(--accent);
-        overflow-wrap: anywhere;
-      }
-
-      .empty {
-        border: 1px dashed #d8c7b4;
-        padding: 18px;
-        border-radius: 12px;
-        color: var(--muted);
-        text-align: center;
-      }
-
-      .countdown {
-        width: min(100% - 28px, 680px);
-        margin: 0 auto 26px;
-        padding: 20px 16px;
-        text-align: center;
-        background: #fff;
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        box-shadow: 0 8px 30px #55351a0a;
-      }
-
-      .countdown-label {
-        margin: 0 0 5px;
-        color: var(--accent);
-        font-size: 0.78rem;
-        font-weight: 800;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-      }
-
-      .countdown h2 {
-        margin: 0 0 5px;
-        font-size: clamp(1.25rem, 4vw, 1.8rem);
-      }
-
-      .countdown-date {
-        margin: 0 0 16px;
-        color: var(--muted);
-      }
-
-      .countdown-grid {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 9px;
-        max-width: 480px;
-        margin: 0 auto;
-      }
-
-      .countdown-unit {
-        padding: 12px 5px;
-        background: #fff8f1;
-        border: 1px solid var(--line);
-        border-radius: 12px;
-      }
-
-      .countdown-number {
-        display: block;
-        color: var(--accent);
-        font-size: clamp(1.45rem, 5vw, 2rem);
-        font-weight: 800;
-        line-height: 1.15;
-        font-variant-numeric: tabular-nums;
-      }
-
-      .countdown-unit span:last-child {
-        color: var(--muted);
-        font-size: 0.75rem;
-      }
-
-      #countdownMessage {
-        margin: 12px 0 0;
-        font-weight: 700;
-      }
-
-      .quiz-card {
-        margin: 22px 0;
-        padding: clamp(16px, 3vw, 26px);
-        background: #fff;
-        border: 1px solid var(--line);
-        border-radius: 18px;
-        box-shadow: 0 8px 30px #55351a0a;
-      }
-
-      .quiz-card h2 {
-        margin: 0 0 5px;
-      }
-
-      .quiz-card .muted {
-        margin-top: 0;
-      }
-
-      .quiz-progress {
-        height: 8px;
-        background: #f3e4d8;
-        border-radius: 99px;
-        overflow: hidden;
-        margin: 16px 0;
-      }
-
-      .quiz-progress span {
-        display: block;
-        height: 100%;
-        width: 0;
-        background: var(--accent);
-        transition: width 0.2s;
-      }
-
-      .quiz-option {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-        border: 1px solid var(--line);
-        border-radius: 11px;
-        padding: 11px;
-        margin: 9px 0;
-        cursor: pointer;
-      }
-
-      .quiz-option:has(input:checked) {
-        border-color: var(--accent);
-        background: #fff8f1;
-      }
-
-      .quiz-option input {
-        width: auto;
-        margin-top: 5px;
-      }
-
-      .quiz-result {
-        padding: 14px;
-        border-radius: 12px;
-        background: #fff8f1;
-        margin-top: 14px;
-      }
-
-      .quiz-result h3 {
-        margin: 0 0 5px;
-      }
-
-      .quiz-small {
-        font-size: 0.86rem;
-        color: var(--muted);
-      }
-
-      footer {
-        text-align: center;
-        padding: 0 18px 32px;
-        color: var(--muted);
-        font-size: 0.86rem;
-      }
-
-      @media (max-width: 620px) {
-        .form-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .full {
-          grid-column: auto;
-        }
-
-        .idea-top {
-          align-items: start;
-        }
-      }
-
-      @media (max-width: 380px) {
-        .countdown-grid {
-          gap: 5px;
-        }
-
-        .countdown-unit {
-          padding: 10px 2px;
-        }
-
-        .countdown-unit span:last-child {
-          font-size: 0.68rem;
-        }
-      }
-
-      /* ===== Bhai Ki Shaadi: Modern Design System ===== */
-      :root {
-        color-scheme: light;
-
-        --color-ink: #29211f;
-        --color-muted: #766a64;
-        --color-paper: #fffaf5;
-        --color-surface: #ffffff;
-        --color-primary: #803b4a;
-        --color-primary-hover: #682b39;
-        --color-gold: #b99459;
-        --color-border: #eadfd4;
-
-        --radius-sm: 12px;
-        --radius-md: 20px;
-        --radius-lg: 30px;
-        --radius-pill: 999px;
-
-        --shadow-card:
-          0 12px 36px rgb(50 30 20 / 7%);
-        --shadow-hover:
-          0 20px 48px rgb(50 30 20 / 12%);
-
-        --page-width: 1160px;
-        --section-space: clamp(48px, 8vw, 100px);
-      }
-
-      html {
-        scroll-behavior: smooth;
-        scroll-padding-top: 90px;
-      }
-
-      body {
-        color: var(--color-ink);
-        background: var(--color-paper);
-        font-family:
-          Inter, "Segoe UI", system-ui, -apple-system, sans-serif;
-        line-height: 1.65;
-        -webkit-font-smoothing: antialiased;
-      }
-
-      button,
-      input,
-      select,
-      textarea {
-        font: inherit;
-      }
-
-      button {
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      button:focus-visible,
-      a:focus-visible {
-        outline: 3px solid var(--color-gold);
-        outline-offset: 4px;
-      }
-
-      main {
-        width: min(calc(100% - 40px), var(--page-width));
-        margin-inline: auto;
-      }
-
-      .panel,
-      .quiz-card {
-        border: 1px solid var(--color-border);
-        border-radius: var(--radius-md);
-        background: var(--color-surface);
-        box-shadow: var(--shadow-card);
-      }
-
-      .panel,
-      .quiz-card,
-      .idea-card,
-      .idea-submit,
-      .countdown {
-        transition:
-          box-shadow 220ms ease,
-          border-color 220ms ease,
-          transform 220ms ease;
-      }
-
-      .idea-card {
-        border-radius: var(--radius-sm);
-        background: var(--color-surface);
-      }
-
-      .btn {
-        min-height: 46px;
-        padding: 11px 20px;
-        border-radius: var(--radius-pill);
-        transition:
-          background-color 180ms ease,
-          transform 180ms ease,
-          box-shadow 180ms ease;
-      }
-
-      .btn:not(:disabled):hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 20px rgb(50 30 20 / 12%);
-      }
-
-      .primary {
-        background: var(--color-primary);
-      }
-
-      .primary:not(:disabled):hover {
-        background: var(--color-primary-hover);
-      }
-
-      .tabs {
-        gap: 10px;
-      }
-
-      .tab {
-        border-radius: var(--radius-pill);
-        transition:
-          background-color 180ms ease,
-          color 180ms ease,
-          border-color 180ms ease;
-      }
-
-      .countdown {
-        width: min(calc(100% - 40px), 760px);
-        padding: clamp(24px, 5vw, 44px);
-        border-radius: var(--radius-lg);
-        background:
-          radial-gradient(
-            ellipse at top,
-            rgb(185 148 89 / 12%),
-            transparent 65%
-          ),
-          var(--color-surface);
-      }
-
-      .countdown-grid {
-        gap: clamp(8px, 2vw, 14px);
-      }
-
-      .countdown-unit {
-        padding: 16px 8px;
-        border-radius: var(--radius-sm);
-        background: #fff8f0;
-      }
-
-      input,
-      select,
-      textarea {
-        border-radius: var(--radius-sm);
-      }
-
-      input:focus,
-      select:focus,
-      textarea:focus {
-        border-color: var(--color-primary);
-        outline-color: rgb(128 59 74 / 25%);
-      }
-
-      @media (hover: hover) {
-        .idea-card:hover {
-          border-color: var(--color-gold);
-          box-shadow: var(--shadow-card);
-        }
-      }
-
-      @media (max-width: 620px) {
-        main {
-          width: min(calc(100% - 28px), var(--page-width));
-        }
-
-        .countdown {
-          width: calc(100% - 28px);
-          border-radius: var(--radius-md);
-        }
-
-        .panel,
-        .quiz-card {
-          border-radius: 18px;
-        }
-
-        .btn {
-          min-height: 48px;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-          scroll-behavior: auto !important;
-          animation-duration: 0.01ms !important;
-          transition-duration: 0.01ms !important;
-        }
-      }
-
-    </style>
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V1GFCXPJHC"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag("js", new Date());
-      gtag("config", "G-V1GFCXPJHC");
-    </script>
-  </head>
-
-  <body>
-    <header>
-      <div class="eyebrow">Our family • Our celebration</div>
-      <h1>❤️ Bhai Ki Shaadi</h1>
-      <p>Cousins’ Planning Hub — bring your ideas, shape the events together, and keep the plan organised.</p>
-    </header>
-
-    <section class="countdown" aria-label="Wedding countdown">
-      <p class="countdown-label">The big day is coming</p>
-      <h2>💍 Sagar’s Wedding Countdown</h2>
-      <p class="countdown-date">4 November 2026 · 11:30 AM IST</p>
-      <div class="countdown-grid" role="timer" aria-live="off" aria-label="Time remaining until the wedding">
-        <div class="countdown-unit"><span class="countdown-number" id="countDays">--</span><span>Days</span></div>
-        <div class="countdown-unit"><span class="countdown-number" id="countHours">--</span><span>Hours</span></div>
-        <div class="countdown-unit"><span class="countdown-number" id="countMinutes">--</span><span>Minutes</span></div>
-        <div class="countdown-unit"><span class="countdown-number" id="countSeconds">--</span><span>Seconds</span></div>
-      </div>
-      <p id="countdownMessage">Counting down to the celebration ❤️</p>
-    </section>
-
-    <div id="engagementFilmMount"></div>
-
-
-    <main>
-      <div class="notice"><strong>Welcome, cousins!</strong> Submit your ideas below. They’ll be saved in our shared database and shown in the Team Ideas section.</div>
-
-      <div class="tabs" role="tablist" aria-label="Wedding events">
-        <button class="tab" role="tab" aria-selected="true" data-event="Haldi">🌼 Haldi</button>
-        <button class="tab" role="tab" aria-selected="false" data-event="Reception Night">✨ Reception Night</button>
-        <button class="tab" role="tab" aria-selected="false" data-event="Wedding">💍 Wedding</button>
-        <button class="tab" type="button" data-target="sagarQuiz">
-          🎯 Sagar Quiz
-        </button>
-      </div>
-
-      <section class="panel" aria-live="polite">
-        <h2 id="eventTitle">🌼 Haldi</h2>
-        <p class="muted" id="eventDesc"></p>
-
-        <h3 class="section-title">Draft event flow</h3>
-        <ol class="flow" id="eventFlow"></ol>
-
-        <h3 class="section-title">Share an idea</h3>
-        <p class="muted">Suggest a theme, activity, music, setup, guest experience, or anything that could make the event special.</p>
-
-        <div class="idea-submit">
-          <h3>Share Your Idea ❤️</h3>
-          <p>Have an idea for Haldi, Reception Night, or Wedding? Share it with the cousins' planning team!</p>
-
-          <form id="ideaForm">
-            <div class="form-grid">
-              <div>
-                <label for="person">Your name *</label>
-                <input id="person" name="name" maxlength="80" autocomplete="name" required>
-              </div>
-
-              <div>
-                <label for="ideaEvent">Event *</label>
-                <select id="ideaEvent" name="event" required>
-                  <option value="Haldi">🌼 Haldi</option>
-                  <option value="Reception Night">✨ Reception Night</option>
-                  <option value="Wedding">💍 Wedding</option>
-                </select>
-              </div>
-
-              <div>
-                <label for="ideaTitle">Idea title *</label>
-                <input id="ideaTitle" name="title" maxlength="120" required>
-              </div>
-
-              <div>
-                <label for="category">Category *</label>
-                <select id="category" name="category" required>
-                  <option value="Decoration">Decoration</option>
-                  <option value="Food">Food</option>
-                  <option value="Music">Music</option>
-                  <option value="Activities">Activities</option>
-                  <option value="Photography">Photography</option>
-                  <option value="Guest Experience">Guest Experience</option>
-                  <option value="Other">Other</option>
-                </select>
-              </div>
-
-              <div class="full">
-                <label for="details">Description *</label>
-                <textarea id="details" name="description" maxlength="2000" required placeholder="Describe your idea..."></textarea>
-              </div>
-
-              <div class="full">
-                <label for="link">Reference link (optional)</label>
-                <input id="link" name="link" type="url" maxlength="500" placeholder="https://...">
-              </div>
-            </div>
-
-            <div class="actions">
-              <button class="btn primary" id="submitIdea" type="submit">＋ Submit Your Idea</button>
-            </div>
-
-            <p id="formMessage" role="status" aria-live="polite"></p>
-          </form>
-
-          <p class="privacy-note">All submitted ideas are visible to anyone who can access this public website. Please don’t include private or sensitive information.</p>
-        </div>
-
-        <div class="ideas-head">
-          <h3 class="section-title">All Team Ideas</h3>
-          <button class="btn secondary" id="refreshIdeas" type="button">Refresh ideas</button>
-        </div>
-
-        <p class="muted" id="ideasSummary">Loading submissions…</p>
-        <div id="ideasMessage" role="status" aria-live="polite"></div>
-        <div id="ideas" class="idea-list">
-          <div class="empty">Loading ideas…</div>
-        </div>
-      </section>
-
-      <section class="quiz-card" id="sagarQuiz" aria-labelledby="quizHeading">
-        <h2 id="quizHeading">🎯 How Well Do You Know Sagar?</h2>
-        <p class="muted">A fun family quiz for the cousins. Answer 10 questions and see where you rank!</p>
-
-        <div id="quizIntro">
-          <label for="quizPlayerName">Your cousin name *</label>
-          <input id="quizPlayerName" maxlength="40" autocomplete="nickname" placeholder="Enter your name" required>
-          <div class="quiz-actions">
-            <button class="btn primary" id="startQuiz" type="button">Start the quiz 🎉</button>
-          </div>
-        </div>
-
-        <div id="quizPlay" hidden>
-          <div class="quiz-small" id="quizProgressText">Question 1 of 10</div>
-          <div class="quiz-progress" aria-hidden="true"><span id="quizProgressBar"></span></div>
-          <h3 id="quizQuestionText"></h3>
-          <div id="quizOptions"></div>
-          <p id="quizMessage" role="status" aria-live="polite"></p>
-          <div class="quiz-actions">
-            <button class="btn primary" id="quizNext" type="button">Next question →</button>
-          </div>
-        </div>
-
-        <div id="quizResult" hidden></div>
-
-        <div class="ideas-head">
-          <h3 class="section-title">🏆 Cousins Leaderboard</h3>
-          <button class="btn secondary" id="refreshQuizBoard" type="button">Refresh scores</button>
-        </div>
-
-        <p class="quiz-small" id="quizBoardMessage" role="status" aria-live="polite">Loading leaderboard…</p>
-        <div id="quizLeaderboard" class="idea-list">
-          <div class="empty">Loading scores…</div>
-        </div>
-
-        <p class="privacy-note">Use a nickname if you prefer. Quiz scores and names are visible to visitors of this public website.</p>
-      </section>
-    </main>
-
-    <footer>Start with ideas. Discuss together. Agree on the plan. Then assign owners. ❤️</footer>
-
-    <script type="module">
-      import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
-
-      const SUPABASE_URL = "https://rbotgymyxqrsiarftjxz.supabase.co";
-      const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_EXINY5MNhPKCUxJ30CWiaw_PvPmOg1l";
-      const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-      const $ = (id) => document.getElementById(id);
-
-      const events = {
-        Haldi: {
-          emoji: "🌼",
-          desc: "A joyful, relaxed family celebration. Let’s collect ideas and build the flow together.",
-          flow: [
-            "Setup and final checks",
-            "Welcome family and guests",
-            "Opening / explain the plan",
-            "Haldi ceremony and family participation",
-            "Photos and fun activities",
-            "Food and refreshments",
-            "Group photos and wrap-up",
-            "Cleanup and return borrowed items"
-          ]
-        },
-        "Reception Night": {
-          emoji: "✨",
-          desc: "A warm, memorable celebration for the couple and guests.",
-          flow: [
-            "Team and vendor readiness check",
-            "Guest arrival and welcome",
-            "Couple’s entry",
-            "Welcome / opening announcement",
-            "Family greetings and photographs",
-            "Speeches, performances, or special moments",
-            "Cake cutting, if planned",
-            "Dinner and guest send-off",
-            "Venue and belongings check"
-          ]
-        },
-        Wedding: {
-          emoji: "💍",
-          desc: "A meaningful Christian wedding, coordinated with the couple, family, and church.",
-          flow: [
-            "Confirm ceremony details with the church and family",
-            "Check couple and wedding party readiness",
-            "Welcome and seat guests",
-            "Ceremony according to the church’s guidance",
-            "Couple and family photographs",
-            "Guest greetings and meal / refreshments, if planned",
-            "Check personal items and final arrangements"
-          ]
-        }
-      };
-
-      let activeEvent = "Haldi";
-
-      function renderEvent() {
-        const e = events[activeEvent];
-        $("eventTitle").textContent = `${e.emoji} ${activeEvent}`;
-        $("eventDesc").textContent = e.desc;
-        $("eventFlow").replaceChildren(
-          ...e.flow.map((item) => {
-            const li = document.createElement("li");
-            li.textContent = item;
-            return li;
-          })
-        );
-
-        document
-          .querySelectorAll(".tab")
-          .forEach((tab) => tab.setAttribute("aria-selected", String(tab.dataset.event === activeEvent)));
-
-        $("ideaEvent").value = activeEvent;
-      }
-
-      function safeLink(value) {
-        try {
-          const u = new URL(value);
-          return ["http:", "https:"].includes(u.protocol) ? u.href : null;
-        } catch {
-          return null;
-        }
-      }
-
-      function renderIdeas(rows) {
-        const container = $("ideas");
-        container.replaceChildren();
-        $("ideasSummary").textContent = `${rows.length} submission${rows.length === 1 ? "" : "s"} across all events`;
-
-        if (!rows.length) {
-          container.innerHTML = '<div class="empty">No ideas submitted yet. Be the first!</div>';
-          return;
-        }
-
-        for (const eventName of ["Haldi", "Reception Night", "Wedding"]) {
-          const eventRows = rows.filter((row) => row.event === eventName);
-          if (!eventRows.length) continue;
-
-          const heading = document.createElement("h3");
-          heading.className = "section-title";
-          heading.textContent = `${events[eventName].emoji} ${eventName}`;
-          container.append(heading);
-
-          for (const row of eventRows) {
-            const card = document.createElement("article");
-            card.className = "idea-card";
-
-            const top = document.createElement("div");
-            top.className = "idea-top";
-
-            const title = document.createElement("h4");
-            title.textContent = row.title;
-
-            const pill = document.createElement("span");
-            pill.className = "pill";
-            pill.textContent = row.category;
-
-            top.append(title, pill);
-            card.append(top);
-
-            const desc = document.createElement("p");
-            desc.textContent = row.description;
-            card.append(desc);
-
-            const meta = document.createElement("small");
-            const date = row.created_at ? new Date(row.created_at).toLocaleString() : "";
-            meta.textContent = `Suggested by ${row.name}${date ? ` · ${date}` : ""}`;
-            card.append(meta);
-
-            const href = row.link ? safeLink(row.link) : null;
-            if (href) {
-              const p = document.createElement("p");
-              const a = document.createElement("a");
-              a.href = href;
-              a.target = "_blank";
-              a.rel = "noopener noreferrer";
-              a.textContent = "Open reference link ↗";
-              p.append(a);
-              card.append(p);
-            }
-
-            container.append(card);
-          }
-        }
-      }
-
-      async function loadIdeas() {
-        const msg = $("ideasMessage");
-        msg.textContent = "";
-        msg.className = "";
-        $("ideasSummary").textContent = "Loading submissions…";
-
-        try {
-          const { data, error } = await supabase
-            .from("ideas")
-            .select("id, created_at, name, event, title, category, description, link")
-            .order("created_at", { ascending: false });
-
-          if (error) throw error;
-          renderIdeas(data || []);
-        } catch (error) {
-          console.error("Loading ideas failed:", error);
-          $("ideasSummary").textContent = "Could not load submissions.";
-          msg.textContent = "The database may not allow public reads yet. Follow the SQL setup instructions, then click Refresh ideas.";
-          msg.className = "error";
-          $("ideas").replaceChildren();
-        }
-      }
-
-      document.querySelectorAll(".tab").forEach((tab) => {
-        tab.addEventListener("click", () => {
-          if (tab.dataset.target === "sagarQuiz") {
-            $("sagarQuiz").scrollIntoView({
-              behavior: "smooth",
-              block: "start"
-            });
-            return;
-          }
-
-          activeEvent = tab.dataset.event;
-          renderEvent();
-        });
-      });
-
-      $("refreshIdeas").addEventListener("click", loadIdeas);
-
-      $("ideaForm").addEventListener("submit", async (event) => {
-        event.preventDefault();
-        const button = $("submitIdea");
-        const message = $("formMessage");
-
-        message.textContent = "";
-        message.className = "";
-
-        const linkValue = $("link").value.trim();
-
-        if (linkValue) {
-          try {
-            const parsed = new URL(linkValue);
-            if (!["http:", "https:"].includes(parsed.protocol)) {
-              throw new Error("Invalid protocol");
-            }
-          } catch {
-            message.textContent = "Please enter a valid link beginning with https:// or http://.";
-            message.className = "error";
-            return;
-          }
-        }
-
-        const idea = {
-          name: $("person").value.trim(),
-          event: $("ideaEvent").value,
-          title: $("ideaTitle").value.trim(),
-          category: $("category").value,
-          description: $("details").value.trim(),
-          link: linkValue || null
-        };
-
-        if (!idea.name || !idea.title || !idea.category || !idea.description) {
-          message.textContent = "Please fill in all required fields.";
-          message.className = "error";
-          return;
-        }
-
-        button.disabled = true;
-        button.textContent = "Submitting...";
-
-        try {
-          const { error } = await supabase.from("ideas").insert(idea);
-          if (error) throw error;
-
-          message.textContent = "❤️ Your idea was submitted successfully!";
-          message.className = "success";
-          $("ideaForm").reset();
-          activeEvent = idea.event;
-          renderEvent();
-          await loadIdeas();
-        } catch (error) {
-          console.error("Idea submission failed:", error);
-          message.textContent = "Submission failed. Please try again. If it continues, contact the planning team.";
-          message.className = "error";
-        } finally {
-          button.disabled = false;
-          button.textContent = "＋ Submit Your Idea";
-        }
-      });
-
-      function updateWeddingCountdown() {
-        const weddingTime = new Date("2026-11-04T11:30:00+05:30").getTime();
-        const remaining = weddingTime - Date.now();
-        const message = $("countdownMessage");
-
-        if (remaining <= 0) {
-          $("countDays").textContent = "0";
-          $("countHours").textContent = "00";
-          $("countMinutes").textContent = "00";
-          $("countSeconds").textContent = "00";
-          message.textContent = "❤️ The wedding day is here! Let’s celebrate!";
-          return;
-        }
-
-        const days = Math.floor(remaining / 86400000);
-        const hours = Math.floor((remaining % 86400000) / 3600000);
-        const minutes = Math.floor((remaining % 3600000) / 60000);
-        const seconds = Math.floor((remaining % 60000) / 1000);
-
-        $("countDays").textContent = String(days);
-        $("countHours").textContent = String(hours).padStart(2, "0");
-        $("countMinutes").textContent = String(minutes).padStart(2, "0");
-        $("countSeconds").textContent = String(seconds).padStart(2, "0");
-        message.textContent = "Every second brings us closer to the celebration ❤️";
-      }
-
-      async function quizRequest(payload) {
-        const response = await fetch(`${SUPABASE_URL}/functions/v1/sagar-quiz`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            apikey: SUPABASE_PUBLISHABLE_KEY
-          },
-          body: JSON.stringify(payload)
-        });
-
-        const body = await response.json().catch(() => ({ error: "Unexpected response from quiz service." }));
-
-        if (!response.ok) {
-          throw new Error(body.error || "Quiz service request failed.");
-        }
-
-        return body;
-      }
-
-      let quizQuestions = [];
-      let quizIndex = 0;
-      let quizAnswers = [];
-      let quizName = "";
-      let quizBusy = false;
-
-      function renderQuizQuestion() {
-        const q = quizQuestions[quizIndex];
-        if (!q) return;
-
-        $("quizProgressText").textContent = `Question ${quizIndex + 1} of ${quizQuestions.length}`;
-        $("quizProgressBar").style.width = `${((quizIndex + 1) / quizQuestions.length) * 100}%`;
-        $("quizQuestionText").textContent = q.question;
-
-        const options = $("quizOptions");
-        options.replaceChildren();
-
-        q.options.forEach((option, index) => {
-          const label = document.createElement("label");
-          label.className = "quiz-option";
-
-          const input = document.createElement("input");
-          input.type = "radio";
-          input.name = "quizAnswer";
-          input.value = String(index);
-          input.checked = quizAnswers[quizIndex] === index;
-
-          const span = document.createElement("span");
-          span.textContent = option;
-
-          label.append(input, span);
-          options.append(label);
-        });
-
-        $("quizMessage").textContent = "";
-        $("quizMessage").className = "";
-        $("quizNext").textContent = quizIndex === quizQuestions.length - 1 ? "Submit answers 🎉" : "Next question →";
-      }
-
-      async function startQuiz() {
-        quizName = $("quizPlayerName").value.trim();
-
-        if (!quizName) {
-          $("quizMessage").textContent = "Please enter your cousin name to begin.";
-          $("quizMessage").className = "error";
-          return;
-        }
-
-        $("quizMessage").className = "";
-        $("quizIntro").hidden = true;
-        $("quizPlay").hidden = false;
-        $("quizResult").hidden = true;
-
-        try {
-          const data = await quizRequest({ action: "questions" });
-          quizQuestions = data.questions || [];
-          quizIndex = 0;
-          quizAnswers = Array(quizQuestions.length).fill(undefined);
-
-          if (!quizQuestions.length) {
-            throw new Error("No quiz questions were returned.");
-          }
-
-          renderQuizQuestion();
-        } catch (error) {
-          $("quizMessage").textContent = error.message || "Could not start the quiz. Please try again.";
-          $("quizMessage").className = "error";
-          $("quizIntro").hidden = false;
-          $("quizPlay").hidden = true;
-        }
-      }
-
-      function advanceQuiz() {
-        const selected = document.querySelector('input[name="quizAnswer"]:checked');
-
-        if (!selected) {
-          $("quizMessage").textContent = "Please select an answer before continuing.";
-          $("quizMessage").className = "error";
-          return;
-        }
-
-        quizAnswers[quizIndex] = Number(selected.value);
-
-        if (quizIndex < quizQuestions.length - 1) {
-          quizIndex += 1;
-          renderQuizQuestion();
-          return;
-        }
-
-        submitQuiz();
-      }
-
-      async function submitQuiz() {
-        if (quizBusy) return;
-        quizBusy = true;
-        $("quizNext").disabled = true;
-        $("quizMessage").textContent = "Submitting your answers…";
-        $("quizMessage").className = "";
-
-        try {
-          const payload = {
-            action: "submit",
-            player_name: quizName,
-            answers: quizAnswers
-          };
-
-          const data = await quizRequest(payload);
-          $("quizPlay").hidden = true;
-          $("quizResult").hidden = false;
-
-          const score = Number(data.score ?? 0);
-          const total = Number(data.total ?? quizQuestions.length);
-          const message = data.message || "Thanks for playing!";
-
-          const resultHtml = `
-            <div class="quiz-result">
-              <h3>🏆 ${quizName}, your score is ${score}/${total}</h3>
-              <p class="muted">${message}</p>
-              <p class="quiz-small">Thanks for playing! Your score has been added to the cousins leaderboard.</p>
-            </div>
-          `;
-
-          $("quizResult").innerHTML = resultHtml;
-          await loadQuizLeaderboard();
-        } catch (error) {
-          $("quizMessage").textContent = error.message || "Could not submit your quiz.";
-          $("quizMessage").className = "error";
-          $("quizPlay").hidden = false;
-        } finally {
-          quizBusy = false;
-          $("quizNext").disabled = false;
-        }
-      }
-
-      async function loadQuizLeaderboard() {
-        try {
-          const data = await quizRequest({ action: "leaderboard" });
-          const rows = data.scores || [];
-          const container = $("quizLeaderboard");
-          const message = $("quizBoardMessage");
-
-          container.replaceChildren();
-          message.textContent = rows.length ? `Showing ${rows.length} cousin${rows.length === 1 ? "" : "s"} on the leaderboard.` : "No scores yet — be the first to finish the quiz!";
-          message.className = "";
-
-          if (!rows.length) {
-            container.innerHTML = '<div class="empty">No scores yet. Be the first cousin to play!</div>';
-            return;
-          }
-
-          rows.forEach((row, index) => {
-            const card = document.createElement("article");
-            card.className = "idea-card";
-
-            const top = document.createElement("div");
-            top.className = "idea-top";
-
-            const name = document.createElement("h4");
-            name.textContent = `${index + 1}. ${row.player_name}`;
-
-            const pill = document.createElement("span");
-            pill.className = "pill";
-            pill.textContent = `${row.score}/10`;
-
-            top.append(name, pill);
-            card.append(top);
-
-            const meta = document.createElement("small");
-            meta.textContent = row.created_at ? new Date(row.created_at).toLocaleString() : "Recently played";
-            card.append(meta);
-
-            container.append(card);
-          });
-        } catch (error) {
-          $("quizBoardMessage").textContent = "Leaderboard is unavailable right now. Please try again soon.";
-          $("quizBoardMessage").className = "error";
-          $("quizLeaderboard").replaceChildren();
-        }
-      }
-      
-
-      $("startQuiz").addEventListener("click", startQuiz);
-      $("quizNext").addEventListener("click", advanceQuiz);
-      $("refreshQuizBoard").addEventListener("click", loadQuizLeaderboard);
-
-      updateWeddingCountdown();
-      setInterval(updateWeddingCountdown, 1000);
-      renderEvent();
-      loadIdeas();
-      loadQuizLeaderboard();
-    </script>
-
-    <script>
-      fetch("./engagement-film.html")
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Could not load the engagement film section.");
-          }
-          return response.text();
-        })
-        .then((html) => {
-          document.getElementById("engagementFilmMount")
-            .insertAdjacentHTML("beforeend", html);
-        })
-        .catch((error) => {
-          console.error("Engagement film section:", error);
-        });
-    </script>
-
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Bhai Ki Shaadi cousins' planning hub">
+<title>Bhai Ki Shaadi — Cousins' Planning Hub</title>
+<link rel="stylesheet" href="./styles.css">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-V1GFCXPJHC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-V1GFCXPJHC');
+</script>
+
+</head>
+<body>
+<nav class="site-nav" aria-label="Main navigation">
+  <a class="brand" href="#home"><span class="brand-mark" aria-hidden="true">♥</span><span class="brand-text">Bhai Ki Shaadi</span></a>
+  <div class="nav-links">
+    <a href="#home" aria-current="page">Home</a>
+    <a href="#events">Events</a>
+    <a href="#our-story">Our Story</a>
+    <a class="nav-cta" href="#family">Family Corner ↗</a>
+  </div>
+</nav>
+<header class="hero" id="home">
+  <div class="hero-inner">
+    <p class="eyebrow">Our family · Our celebration</p>
+    <h1>One family.<br><span>One beautiful beginning.</span></h1>
+    <p class="hero-copy">We’re coming together to celebrate Sagar. Find the wedding plans, relive the memories, and make this celebration our own.</p>
+    <div class="hero-actions">
+      <a class="hero-link hero-link-primary" href="#events">Explore the celebrations <span aria-hidden="true">→</span></a>
+      <a class="hero-link hero-link-secondary" href="#our-story">Watch our story</a>
+    </div>
+  </div>
+</header>
+
+<section class="countdown" aria-label="Wedding countdown">
+  <p class="countdown-label">The big day is coming</p>
+  <h2>💍 Sagar’s Wedding Countdown</h2>
+  <p class="countdown-date">4 November 2026 · 11:30 AM IST</p>
+  <div class="countdown-grid" role="timer" aria-live="off" aria-label="Time remaining until the wedding">
+    <div class="countdown-unit"><span class="countdown-number" id="countDays">--</span><span>Days</span></div>
+    <div class="countdown-unit"><span class="countdown-number" id="countHours">--</span><span>Hours</span></div>
+    <div class="countdown-unit"><span class="countdown-number" id="countMinutes">--</span><span>Minutes</span></div>
+    <div class="countdown-unit"><span class="countdown-number" id="countSeconds">--</span><span>Seconds</span></div>
+  </div>
+  <p id="countdownMessage">Counting down to the celebration ❤️</p>
+</section>
+
+<section class="home-section" aria-labelledby="welcomeHeading" style="width:min(calc(100% - 36px),1160px);margin-inline:auto">
+  <div class="section-heading">
+    <div><p class="eyebrow">Everything in one place</p><h2 id="welcomeHeading">Make yourself at home.</h2><p>From the wedding schedule to family fun, start wherever you like.</p></div>
+  </div>
+  <div class="feature-grid">
+    <a class="feature-card" href="#events"><span class="feature-icon" aria-hidden="true">🗓️</span><h3>Wedding Schedule</h3><p>Explore Haldi, Reception Night, and Wedding plans.</p><span class="feature-arrow">Explore events →</span></a>
+    <a class="feature-card" href="#our-story"><span class="feature-icon" aria-hidden="true">🎬</span><h3>Our Story</h3><p>Take a little break and relive Sagar’s engagement celebration.</p><span class="feature-arrow">Watch the film →</span></a>
+    <a class="feature-card" href="#family"><span class="feature-icon" aria-hidden="true">🎉</span><h3>Family Corner</h3><p>Share ideas, play the Sagar quiz, and see the leaderboard.</p><span class="feature-arrow">Join the fun →</span></a>
+  </div>
+</section>
+
+<section class="engagement-film" id="our-story" aria-labelledby="engagement-title">
+  <div class="film-inner">
+    <p class="film-eyebrow">A LITTLE GLIMPSE OF FOREVER</p>
+    <h2 id="engagement-title">The Beginning of Their Story</h2>
+    <p class="film-description">A day filled with love, laughter, and memories. Relive Sagar’s engagement celebration.</p>
+    <div class="film-frame"><iframe src="https://www.youtube-nocookie.com/embed/Oy3GwWDBf5s?rel=0" title="Sagar's Engagement Mashup" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe></div>
+    <p class="film-caption">Sagar’s Engagement ✦ A memory to cherish</p>
+  </div>
+</section>
+
+<main>
+<section class="home-section" id="events" aria-labelledby="eventTitle">
+<div class="notice"><strong>Welcome, cousins!</strong> Submit your ideas below. They’ll be saved in our shared database and shown in the Team Ideas section.</div>
+<div class="tabs" role="tablist" aria-label="Wedding events">
+<button class="tab" role="tab" aria-selected="true" data-event="Haldi">🌼 Haldi</button>
+<button class="tab" role="tab" aria-selected="false" data-event="Reception Night">✨ Reception Night</button>
+<button class="tab" role="tab" aria-selected="false" data-event="Wedding">💍 Wedding</button>
+</div>
+<section class="panel" aria-live="polite">
+<h2 id="eventTitle">🌼 Haldi</h2><p class="muted" id="eventDesc"></p>
+<h3 class="section-title">Draft event flow</h3><ol class="flow" id="eventFlow"></ol>
+<h3 class="section-title">Share an idea</h3><p class="muted">Suggest a theme, activity, music, setup, guest experience, or anything that could make the event special.</p>
+<div class="idea-submit">
+<h3>Share Your Idea ❤️</h3><p>Have an idea for Haldi, Reception Night, or Wedding? Share it with the cousins' planning team!</p>
+<form id="ideaForm"><div class="form-grid">
+<div><label for="person">Your name *</label><input id="person" name="name" maxlength="80" autocomplete="name" required></div>
+<div><label for="ideaEvent">Event *</label><select id="ideaEvent" name="event" required><option value="Haldi">🌼 Haldi</option><option value="Reception Night">✨ Reception Night</option><option value="Wedding">💍 Wedding</option></select></div>
+<div><label for="ideaTitle">Idea title *</label><input id="ideaTitle" name="title" maxlength="120" required></div>
+<div><label for="category">Category *</label><select id="category" name="category" required><option value="Decoration">Decoration</option><option value="Food">Food</option><option value="Music">Music</option><option value="Activities">Activities</option><option value="Photography">Photography</option><option value="Guest Experience">Guest Experience</option><option value="Other">Other</option></select></div>
+<div class="full"><label for="details">Description *</label><textarea id="details" name="description" maxlength="2000" required placeholder="Describe your idea..."></textarea></div>
+<div class="full"><label for="link">Reference link (optional)</label><input id="link" name="link" type="url" maxlength="500" placeholder="https://..."></div>
+</div><div class="actions"><button class="btn primary" id="submitIdea" type="submit">＋ Submit Your Idea</button></div><p id="formMessage" role="status" aria-live="polite"></p></form>
+<p class="privacy-note">All submitted ideas are visible to anyone who can access this public website. Please don’t include private or sensitive information.</p>
+</div>
+<div class="ideas-head"><h3 class="section-title">All Team Ideas</h3><button class="btn secondary" id="refreshIdeas" type="button">Refresh ideas</button></div>
+<p class="muted" id="ideasSummary">Loading submissions…</p><div id="ideasMessage" role="status" aria-live="polite"></div><div id="ideas" class="idea-list"><div class="empty">Loading ideas…</div></div>
+</section>
+</section>
+<section class="home-section quiz-card" id="family" aria-labelledby="quizHeading">
+  <h2 id="quizHeading">🎯 How Well Do You Know Sagar?</h2>
+  <p class="muted">A fun family quiz for the cousins. Answer 10 questions and see where you rank!</p>
+  <div id="quizIntro">
+    <label for="quizPlayerName">Your cousin name *</label>
+    <input id="quizPlayerName" maxlength="40" autocomplete="nickname" placeholder="Enter your name" required>
+    <div class="quiz-actions"><button class="btn primary" id="startQuiz" type="button">Start the quiz 🎉</button></div>
+  </div>
+  <div id="quizPlay" hidden>
+    <div class="quiz-small" id="quizProgressText">Question 1 of 10</div>
+    <div class="quiz-progress" aria-hidden="true"><span id="quizProgressBar"></span></div>
+    <h3 id="quizQuestionText"></h3>
+    <div id="quizOptions"></div>
+    <p id="quizMessage" role="status" aria-live="polite"></p>
+    <div class="quiz-actions"><button class="btn primary" id="quizNext" type="button">Next question →</button></div>
+  </div>
+  <div id="quizResult" hidden></div>
+  <div class="ideas-head"><h3 class="section-title">🏆 Cousins Leaderboard</h3><button class="btn secondary" id="refreshQuizBoard" type="button">Refresh scores</button></div>
+  <p class="quiz-small" id="quizBoardMessage" role="status" aria-live="polite">Loading leaderboard…</p>
+  <div id="quizLeaderboard" class="idea-list"><div class="empty">Loading scores…</div></div>
+  <p class="privacy-note">Use a nickname if you prefer. Quiz scores and names are visible to visitors of this public website.</p>
+</section></main>
+<footer><p>Made with love for Sagar’s big day. ❤️</p><p>Start with ideas. Discuss together. Celebrate together.</p></footer>
+<script type="module">
+import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
+const SUPABASE_URL="https://rbotgymyxqrsiarftjxz.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_EXINY5MNhPKCUxJ30CWiaw_PvPmOg1l";
+const supabase=createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
+const $=id=>document.getElementById(id);
+const events={
+"Haldi":{emoji:"🌼",desc:"A joyful, relaxed family celebration. Let’s collect ideas and build the flow together.",flow:["Setup and final checks","Welcome family and guests","Opening / explain the plan","Haldi ceremony and family participation","Photos and fun activities","Food and refreshments","Group photos and wrap-up","Cleanup and return borrowed items"]},
+"Reception Night":{emoji:"✨",desc:"A warm, memorable celebration for the couple and guests.",flow:["Team and vendor readiness check","Guest arrival and welcome","Couple’s entry","Welcome / opening announcement","Family greetings and photographs","Speeches, performances, or special moments","Cake cutting, if planned","Dinner and guest send-off","Venue and belongings check"]},
+"Wedding":{emoji:"💍",desc:"A meaningful Christian wedding, coordinated with the couple, family, and church.",flow:["Confirm ceremony details with the church and family","Check couple and wedding party readiness","Welcome and seat guests","Ceremony according to the church’s guidance","Couple and family photographs","Guest greetings and meal / refreshments, if planned","Check personal items and final arrangements"]}
+};
+let activeEvent="Haldi";
+function renderEvent(){
+ const e=events[activeEvent];$("eventTitle").textContent=`${e.emoji} ${activeEvent}`;$("eventDesc").textContent=e.desc;
+ $("eventFlow").replaceChildren(...e.flow.map(item=>{const li=document.createElement("li");li.textContent=item;return li;}));
+ document.querySelectorAll(".tab").forEach(tab=>tab.setAttribute("aria-selected",String(tab.dataset.event===activeEvent)));
+ $("ideaEvent").value=activeEvent;
+}
+function safeLink(value){
+ try{const u=new URL(value);return ["http:","https:"].includes(u.protocol)?u.href:null;}catch{return null;}
+}
+function renderIdeas(rows){
+ const container=$("ideas");container.replaceChildren();
+ $("ideasSummary").textContent=`${rows.length} submission${rows.length===1?"":"s"} across all events`;
+ if(!rows.length){container.innerHTML='<div class="empty">No ideas submitted yet. Be the first!</div>';return;}
+ for(const eventName of ["Haldi","Reception Night","Wedding"]){
+   const eventRows=rows.filter(row=>row.event===eventName);
+   if(!eventRows.length)continue;
+   const heading=document.createElement("h3");heading.className="section-title";heading.textContent=events[eventName].emoji+" "+eventName;container.append(heading);
+   for(const row of eventRows){
+     const card=document.createElement("article");card.className="idea-card";
+     const top=document.createElement("div");top.className="idea-top";
+     const title=document.createElement("h4");title.textContent=row.title;
+     const pill=document.createElement("span");pill.className="pill";pill.textContent=row.category;
+     top.append(title,pill);card.append(top);
+     const desc=document.createElement("p");desc.textContent=row.description;card.append(desc);
+     const meta=document.createElement("small");const date=row.created_at?new Date(row.created_at).toLocaleString():"";meta.textContent=`Suggested by ${row.name}${date?" · "+date:""}`;card.append(meta);
+     const href=row.link?safeLink(row.link):null;
+     if(href){const p=document.createElement("p");const a=document.createElement("a");a.href=href;a.target="_blank";a.rel="noopener noreferrer";a.textContent="Open reference link ↗";p.append(a);card.append(p);}
+     container.append(card);
+   }
+ }
+}
+async function loadIdeas(){
+ const msg=$("ideasMessage");msg.textContent="";msg.className="";
+ $("ideasSummary").textContent="Loading submissions…";
+ try{
+   const {data,error}=await supabase.from("ideas").select("id, created_at, name, event, title, category, description, link").order("created_at",{ascending:false});
+   if(error)throw error;
+   renderIdeas(data||[]);
+ }catch(error){
+   console.error("Loading ideas failed:",error);
+   $("ideasSummary").textContent="Could not load submissions.";
+   msg.textContent="The database may not allow public reads yet. Follow the SQL setup instructions, then click Refresh ideas.";
+   msg.className="error";
+   $("ideas").replaceChildren();
+ }
+}
+document.querySelectorAll(".tab").forEach(tab=>tab.addEventListener("click",()=>{activeEvent=tab.dataset.event;renderEvent();}));
+$("refreshIdeas").addEventListener("click",loadIdeas);
+$("ideaForm").addEventListener("submit",async event=>{
+ event.preventDefault();const button=$("submitIdea"),message=$("formMessage");message.textContent="";message.className="";
+ const linkValue=$("link").value.trim();
+ if(linkValue){try{const parsed=new URL(linkValue);if(!["http:","https:"].includes(parsed.protocol))throw Error("Invalid protocol");}catch{message.textContent="Please enter a valid link beginning with https:// or http://.";message.className="error";return;}}
+ const idea={name:$("person").value.trim(),event:$("ideaEvent").value,title:$("ideaTitle").value.trim(),category:$("category").value,description:$("details").value.trim(),link:linkValue||null};
+ if(!idea.name||!idea.title||!idea.category||!idea.description){message.textContent="Please fill in all required fields.";message.className="error";return;}
+ button.disabled=true;button.textContent="Submitting...";
+ try{const {error}=await supabase.from("ideas").insert(idea);if(error)throw error;
+ message.textContent="❤️ Your idea was submitted successfully!";message.className="success";$("ideaForm").reset();activeEvent=idea.event;renderEvent();await loadIdeas();
+ }catch(error){console.error("Idea submission failed:",error);message.textContent="Submission failed. Please try again. If it continues, contact the planning team.";message.className="error";}
+ finally{button.disabled=false;button.textContent="＋ Submit Your Idea";}
+});
+
+
+// Quiz requests go through a Supabase Edge Function. Correct answers are never sent to this page.
+const QUIZ_FUNCTION_URL = `${SUPABASE_URL}/functions/v1/sagar-quiz`;
+let quizQuestions=[]; let quizIndex=0; let quizAnswers=[]; let quizName=''; let quizBusy=false;
+async function quizRequest(payload){
+ const response=await fetch(QUIZ_FUNCTION_URL,{method:'POST',headers:{'Content-Type':'application/json', 'apikey':SUPABASE_PUBLISHABLE_KEY},body:JSON.stringify(payload)});
+ const body=await response.json().catch(()=>({error:'Unexpected response from quiz service.'}));
+ if(!response.ok)throw new Error(body.error||'Quiz service request failed.'); return body;
+}
+function renderQuizQuestion(){
+ const q=quizQuestions[quizIndex]; if(!q)return;
+ $('quizProgressText').textContent=`Question ${quizIndex+1} of ${quizQuestions.length}`;
+ $('quizProgressBar').style.width=`${((quizIndex+1)/quizQuestions.length)*100}%`;
+ $('quizQuestionText').textContent=q.question;
+ const options=$('quizOptions'); options.replaceChildren();
+ q.options.forEach((option,index)=>{const label=document.createElement('label');label.className='quiz-option';const input=document.createElement('input');input.type='radio';input.name='quizAnswer';input.value=String(index);input.checked=quizAnswers[quizIndex]===index;const span=document.createElement('span');span.textContent=option;label.append(input,span);options.append(label);});
+ $('quizMessage').textContent='';$('quizNext').textContent=quizIndex===quizQuestions.length-1?'Submit answers 🎉':'Next question →';
+}
+async function loadQuizLeaderboard(){
+ const msg=$('quizBoardMessage');msg.textContent='Loading leaderboard…';
+ try{const data=await quizRequest({action:'leaderboard'});const rows=data.scores||[];const box=$('quizLeaderboard');box.replaceChildren();
+ if(!rows.length){box.innerHTML='<div class="empty">No scores yet. Be the first cousin to play!</div>';msg.textContent='';return;}
+ rows.forEach((row,index)=>{const card=document.createElement('article');card.className='idea-card';const top=document.createElement('div');top.className='idea-top';const name=document.createElement('h4');name.textContent=`${index+1}. ${row.player_name}`;const pill=document.createElement('span');pill.className='pill';pill.textContent=`${row.score}/10`;top.append(name,pill);card.append(top);const date=document.createElement('small');date.textContent=new Date(row.created_at).toLocaleString();card.append(date);box.append(card);});msg.textContent=`Top ${rows.length} score${rows.length===1?'':'s'}`;
+ }catch(error){msg.textContent=error.message;}}
+$('startQuiz').addEventListener('click',async()=>{
+ const name=$('quizPlayerName').value.trim();if(!name){$('quizPlayerName').focus();return;}if(quizBusy)return;quizBusy=true;$('startQuiz').disabled=true;
+ try{const data=await quizRequest({action:'questions'});quizQuestions=data.questions||[];if(quizQuestions.length!==10)throw new Error('The quiz is being prepared. Please try again later.');quizName=name;quizIndex=0;quizAnswers=Array(quizQuestions.length).fill(null);$('quizIntro').hidden=true;$('quizResult').hidden=true;$('quizPlay').hidden=false;renderQuizQuestion();}
+ catch(error){alert(error.message);}finally{quizBusy=false;$('startQuiz').disabled=false;}
+});
+$('quizNext').addEventListener('click',async()=>{
+ if(quizBusy)return;const selected=document.querySelector('input[name="quizAnswer"]:checked');if(!selected){$('quizMessage').textContent='Choose an answer to continue.';return;}quizAnswers[quizIndex]=Number(selected.value);
+ if(quizIndex<quizQuestions.length-1){quizIndex++;renderQuizQuestion();return;}
+ quizBusy=true;$('quizNext').disabled=true;$('quizNext').textContent='Checking answers…';
+ try{const result=await quizRequest({action:'submit',player_name:quizName,answers:quizAnswers});$('quizPlay').hidden=true;const panel=$('quizResult');panel.hidden=false;panel.className='quiz-result';const h=document.createElement('h3');h.textContent=`You scored ${result.score}/10 ${result.score===10?'🏆':result.score>=7?'🎉':result.score>=4?'😄':'😂'}`;const p=document.createElement('p');p.textContent=result.message||'Thanks for playing!';panel.replaceChildren(h,p);const share=document.createElement('button');share.className='btn secondary';share.type='button';share.textContent='Share your score on WhatsApp';share.addEventListener('click',()=>{const text=`I scored ${result.score}/10 in the “How Well Do You Know Sagar?” wedding quiz! Can you beat me? ${location.href}#sagarQuiz`;window.open(`https://wa.me/?text=${encodeURIComponent(text)}`,'_blank','noopener,noreferrer');});panel.append(share);await loadQuizLeaderboard();}
+ catch(error){$('quizMessage').textContent=error.message;$('quizPlay').hidden=false;}
+ finally{quizBusy=false;$('quizNext').disabled=false;}
+});
+$('refreshQuizBoard').addEventListener('click',loadQuizLeaderboard);
+loadQuizLeaderboard();
+
+function updateWeddingCountdown() {
+  // India Standard Time (UTC+05:30): 4 November 2026 at 11:30 AM.
+  const weddingTime = new Date("2026-11-04T11:30:00+05:30").getTime();
+  const remaining = weddingTime - Date.now();
+  const message = $("countdownMessage");
+
+  if (remaining <= 0) {
+    $("countDays").textContent = "0";
+    $("countHours").textContent = "00";
+    $("countMinutes").textContent = "00";
+    $("countSeconds").textContent = "00";
+    message.textContent = "❤️ The wedding day is here! Let’s celebrate!";
+    return;
+  }
+
+  const days = Math.floor(remaining / 86400000);
+  const hours = Math.floor((remaining % 86400000) / 3600000);
+  const minutes = Math.floor((remaining % 3600000) / 60000);
+  const seconds = Math.floor((remaining % 60000) / 1000);
+
+  $("countDays").textContent = String(days);
+  $("countHours").textContent = String(hours).padStart(2, "0");
+  $("countMinutes").textContent = String(minutes).padStart(2, "0");
+  $("countSeconds").textContent = String(seconds).padStart(2, "0");
+  message.textContent = "Every second brings us closer to the celebration ❤️";
+}
+
+updateWeddingCountdown();
+setInterval(updateWeddingCountdown, 1000);
+renderEvent();loadIdeas();
+</script>
+</body>
 </html>
