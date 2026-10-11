@@ -504,6 +504,9 @@
       <p id="countdownMessage">Counting down to the celebration ❤️</p>
     </section>
 
+    <div id="engagementFilmMount"></div>
+
+
     <main>
       <div class="notice"><strong>Welcome, cousins!</strong> Submit your ideas below. They’ll be saved in our shared database and shown in the Team Ideas section.</div>
 
@@ -1120,5 +1123,23 @@
       loadIdeas();
       loadQuizLeaderboard();
     </script>
+
+    <script>
+      fetch("./engagement-film.html")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Could not load the engagement film section.");
+          }
+          return response.text();
+        })
+        .then((html) => {
+          document.getElementById("engagementFilmMount")
+            .insertAdjacentHTML("beforeend", html);
+        })
+        .catch((error) => {
+          console.error("Engagement film section:", error);
+        });
+    </script>
+
   </body>
 </html>
