@@ -16,12 +16,12 @@ const questions = [
   {
     id: "q2",
     question: "What is Sagar's favourite movie type?",
-    options: ["Action", "Romance", "Comedy", "His actual favourite"]
+    options: ["Action", "Love Story", "Comedy", "Super Hero"]
   },
   {
     id: "q3",
     question: "What does Sagar enjoy doing in his free time?",
-    options: ["Watching movies", "Listening to music", "Going out", "His actual hobby"]
+    options: ["Watching movies", "Listening to music", "Going out", "Playing games"]
   },
   {
     id: "q4",
